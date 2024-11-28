@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interior Designer Dashboard</title>
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+    <div id="navigation" class="hidden">
+        <button id="back-arrow" class="nav-button" disabled>&larr; Back</button>
+        <button id="next-arrow" class="nav-button" disabled>Next &rarr;</button>
+    </div>
+    
+    <div id="landing-page" class="page">
+        <h1 class="welcome-text">Welcome to Posspole Dashboard</h1>
+        <button id="explore-button" class="button">Explore More</button>
+    </div>
+
+    <div id="category-page" class="page hidden">
+        <div class="grid">
+            <div class="grid-item" data-category="standard">Standard Interio</div>
+            <div class="grid-item" data-category="premium">Premium Interio</div>
+            <div class="grid-item" data-category="luxury">Luxury Interio</div>
+        </div>
+    </div>
+
+    <div id="content-list-page" class="page hidden">
+        <ul class="content-list">
+            <li data-element="kitchen">Kitchen</li>
+            <li data-element="master-bedroom">Master Bedroom - Wardrobe</li>
+            <li data-element="kids-bedroom">Kids Bedroom - Wardrobe</li>
+            <li data-element="guest-bedroom">Guest Bedroom - Wardrobe</li>
+            <li data-element="dresser">Dresser</li>
+            <li data-element="living-tv">Living – TV Wall</li>
+            <li data-element="living-feature">Living – Feature Wall</li>
+            <li data-element="pooja-room">Pooja Room</li>
+            <li data-element="crockery">Crockery</li>
+            <li data-element="partition-wall">Partition Wall</li>
+            <li data-element="shoe-rack">Shoe Rack</li>
+            <li data-element="utility">Utility</li>
+            <li data-element="vanity">Vanity</li>
+        </ul>
+    </div>
+
+    <div id="gallery-page" class="page hidden">
+        <div id="gallery" class="gallery-container"></div>
+        <!-- <button id="back-button" class="button">Back</button> -->
+      
+
+    </div>
+
+    <script src="./script.js"></script>
+</body>
+</html>
