@@ -1,0 +1,122 @@
+/* Wishlist Icon */
+.wishlist-icon {
+    position: fixed;
+    top: 60px;
+    right: 90px;
+    cursor: pointer;
+    z-index: 100;
+}
+
+.wishlist-icon img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+/* Wishlist Modal */
+.wishlist-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 200;
+}
+
+.wishlist-modal-content {
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    width: 80%;
+    max-width: 500px;
+}
+
+.close-wishlist {
+    background: #f55d56;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 10px 20px;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+
+/* Wishlist Item */
+.wishlist-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 10px 0;
+}
+
+.wishlist-item img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-right: 20px;
+}
+
+.wishlist-item button {
+    background: #ff6b6b;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+
+/* Wishlist Button */
+.wishlist-btn {
+    position: absolute;
+    top: 10px; /* Adjust to place at the top-right */
+    right: 10px;
+    background: rgba(255, 255, 255, 0.8); /* Semi-transparent background */
+    color: #ff6b6b; /* Wishlist icon or text color */
+    border: none;
+    border-radius: 50%;
+    padding: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s ease-in-out;
+    z-index: 10;
+}
+
+.wishlist-btn:hover {
+    transform: scale(1.2); /* Slight zoom on hover */
+    background: #ff6b6b;
+    color: white;
+}
+
+/* Gallery Box Container */
+.box {
+    position: relative; /* Needed for absolutely positioning the button */
+    width: 300px;
+    height: 400px;
+    background-size: cover;
+    background-position: center;
+    border-radius: 8px;
+    overflow: hidden;
+    margin: 10px; /* Ensure there's proper spacing between images */
+}
+
+.overlay-label {
+    position: absolute;
+    bottom: 10px; /* Position at the bottom */
+    left: 10px;
+    background: rgba(0, 0, 0, 0.6); /* Semi-transparent background */
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 14px;
+    z-index: 5;
+}

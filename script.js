@@ -1,8 +1,31 @@
+
 console.log("JavaScript Loaded");
+
+// Utility function to include token in fetch headers
+function fetchWithToken(url, options = {}) {
+    const token = localStorage.getItem('token'); // Retrieve token from localStorage
+    if (!token) {
+        console.error("No token found in localStorage");
+        return Promise.reject("No token found");
+    }
+
+    const headers = options.headers || {};
+    headers['Authorization'] = `Bearer ${token}`;
+
+    // Include headers in the options
+    return fetch(url, { ...options, headers });
+}
+
+const token = localStorage.getItem('token');
+if (!token) {
+    alert('Unauthorized access!');
+    window.location.href = '/'; // Redirect to login
+}
+
 
 // Get buttons and navigation container
 const exploreButton = document.getElementById("explore-button");
-const categoryItems = document.querySelectorAll(".grid-item");
+const categoryItems = document.querySelectorAll("#category-page .card p");
 const backArrow = document.getElementById("back-arrow");
 const nextArrow = document.getElementById("next-arrow");
 const navigation = document.getElementById("navigation");
@@ -18,6 +41,16 @@ const pages = {
 };
 
 
+if (exploreButton) {
+    // Add click event to the Explore button
+    exploreButton.addEventListener("click", () => {
+        console.log("Explore button clicked");
+        showPage("category");
+    });
+} else {
+    console.error("Explore button not found in the DOM.");
+}
+
 // Gallery title container
 const galleryTitle = document.createElement("h2");
 galleryTitle.className = "gallery-title";
@@ -29,7 +62,7 @@ galleryContainer.insertAdjacentElement("beforebegin", galleryTitle);
 const fetchImagesFromServer = async (category, section) => {
     try {
         console.log(`Fetching images for category: ${category}, section: ${section}`);
-        const response = await fetch(`/api/images?category=${category}&section=${section}`);
+        const response = await fetchWithToken(`/api/images?category=${category}&section=${section}`);
         if (!response.ok) {
             throw new Error("Failed to fetch images");
         }
@@ -55,8 +88,8 @@ const contentList = [
     { element: "kids-bedroom", label: "Kids Bedroom - Wardrobe" },
     { element: "guest-bedroom", label: "Guest Bedroom - Wardrobe" },
     { element: "dresser", label: "Dresser" },
-    { element: "living-tv", label: "Living – TV Wall" },
-    { element: "living-feature", label: "Living – Feature Wall" },
+    { element: "living-tv", label: "Living - TV Wall" },
+    { element: "living-feature", label: "Living  Feature Wall" },
     { element: "pooja-room", label: "Pooja Room" },
     { element: "crockery", label: "Crockery" },
     { element: "partition-wall", label: "Partition Wall" },
@@ -70,15 +103,18 @@ const renderContentList = () => {
     contentListContainer.innerHTML = contentList
         .map(
             (item) =>
-                `<li data-element="${item.element}" class="content-item">${item.label}</li>`
+               `<li data-element="${item.element}" class="fancy-list-item">
+                    <span>${item.label}</span>
+                 </li>`
         )
         .join("");
 
     // Add event listeners to dynamically generated list items
-    const contentItems = document.querySelectorAll(".content-item");
+    const contentItems = document.querySelectorAll(".fancy-list-item");
     contentItems.forEach((item) => {
         item.addEventListener("click", async (e) => {
-            const section = e.target.dataset.element; // Get the section
+            const section = e.currentTarget.
+            dataset.element; // Get the section
             console.log(`Selected section: ${section}`);
 
             // Fetch images dynamically
@@ -96,51 +132,60 @@ const renderContentList = () => {
     });
 };
 
+// Function to render the gallery and attach click events for full-screen
+// Function to render the gallery and attach click events for full-screen
+const renderGalleryImages = (images, section) => {
+    const galleryElement = document.getElementById("gallery");
 
-// Function to render the gallery with dynamic styling and labels
-const renderGallery = (images, section) => {
-    // Update the gallery title
-    galleryTitle.textContent = `${section} Models`;
-
-    // Render the images with labels
-    galleryContainer.innerHTML = images
+    galleryElement.innerHTML = images
         .map(
-            (src, index) =>
-                `<div class="box" style="background-image: url('${src}');" onclick="openFullScreen('${src}')">
-            <div class="overlay-label">Model ${index + 1}</div>
-        </div>`
+            (src, index) => `
+            <div class="image-box" style="background-image: url('${src}');">
+                <img 
+                    src="${src}" 
+                    class="gallery-thumbnail" 
+                    alt="${section} - Model ${index + 1}" 
+                />
+                <div class="image-overlay-label">Model ${index + 1}</div>
+            </div>`
         )
         .join("");
 
-    // Update the CSS variable --childs dynamically
-    galleryContainer.style.setProperty("--childs", images.length);
+    // Attach click event listener to images for full-screen view
+    const galleryThumbnails = document.querySelectorAll(".gallery-thumbnail");
+    galleryThumbnails.forEach((thumbnail) => {
+        thumbnail.addEventListener("click", () => showFullScreenImage(thumbnail.src));
+    });
 };
 
-// Function to display image in full screen
-const openFullScreen = (imageSrc) => {
+// Function to display an image in full screen
+const showFullScreenImage = (imageSrc) => {
     // Ensure the image source URL is handled correctly
-    const sanitizedSrc = encodeURI(imageSrc);
+    const safeSrc = encodeURI(imageSrc);
 
     // Create a full-screen container
-    const fullScreenContainer = document.createElement("div");
-    fullScreenContainer.className = "full-screen-container";
-    fullScreenContainer.innerHTML = `
-        <img src="${sanitizedSrc}" class="full-screen-image" alt="Full Screen Model" />
-        <button class="close-button" onclick="closeFullScreen()">Close</button>
+    const fullScreenDiv = document.createElement("div");
+    fullScreenDiv.className = "image-full-screen-container";
+    fullScreenDiv.innerHTML = `
+        <img src="${safeSrc}" class="image-full-screen" alt="Full Screen Model" />
+        <button class="image-close-button" onclick="closeFullScreenImage()">Close</button>
     `;
 
     // Append the container to the body
-    document.body.appendChild(fullScreenContainer);
+    document.body.appendChild(fullScreenDiv);
 };
 
-
-// Function to close the full screen view
-const closeFullScreen = () => {
-    const fullScreenContainer = document.querySelector(".full-screen-container");
-    if (fullScreenContainer) {
-        fullScreenContainer.remove();
+// Function to close the full-screen view
+const closeFullScreenImage = () => {
+    const fullScreenDiv = document.querySelector(".image-full-screen-container");
+    if (fullScreenDiv) {
+        fullScreenDiv.remove();
     }
 };
+
+
+
+
 
 // Function to show a specific page
 const showPage = (pageKey) => {
@@ -170,9 +215,9 @@ exploreButton.addEventListener("click", () => {
 });
 
 // Add event listeners for category items
-categoryItems.forEach((item) => {
-    item.addEventListener("click", (e) => {
-        selectedCategory = e.target.dataset.category; // Set the selected category
+categoryItems.forEach((item, index) => {
+    item.addEventListener("click", () => {
+        selectedCategory = ["standard", "premium", "luxury"][index]; // Map the index to category
         console.log(`Selected category: ${selectedCategory}`);
         showPage("contentList");
     });
@@ -190,3 +235,98 @@ nextArrow.addEventListener("click", () => {
     if (currentPage === "category") showPage("contentList");
     else if (currentPage === "contentList") showPage("gallery");
 });
+
+
+
+// // Function to display image in full screen
+// const openFullScreen = (imageSrc) => {
+//     // Ensure the image source URL is handled correctly
+//     const sanitizedSrc = encodeURI(imageSrc);
+
+//     // Create a full-screen container
+//     const fullScreenContainer = document.createElement("div");
+//     fullScreenContainer.className = "full-screen-container";
+//     fullScreenContainer.innerHTML = `
+//         <img src="${sanitizedSrc}" class="full-screen-image" alt="Full Screen Model" />
+//         <button class="close-button" onclick="closeFullScreen()">Close</button>
+//     `;
+
+//     // Append the container to the body
+//     document.body.appendChild(fullScreenContainer);
+// };
+
+
+// // Function to close the full screen view
+// const closeFullScreen = () => {
+//     const fullScreenContainer = document.querySelector(".full-screen-container");
+//     if (fullScreenContainer) {
+//         fullScreenContainer.remove();
+//     }
+// };
+
+// document.addEventListener("DOMContentLoaded", async () => {
+//     const profileIcon = document.getElementById("profile-icon");
+//     const profileCard = document.getElementById("profile-card");
+//     const profileName = document.getElementById("profile-name");
+//     const profileEmail = document.getElementById("profile-email");
+//     const profilePhone = document.getElementById("profile-phone");
+//     const profileImage = document.getElementById("profile-image");
+//     const profileIconImage = document.getElementById("profile-icon-img");
+//     const logoutButton = document.getElementById("logout-button");
+
+//     // Fetch profile details from API
+//     try {
+//         const response = await fetchWithToken('/api/profile');
+//         if (!response.ok) throw new Error("Failed to fetch profile data");
+
+//         const profile = await response.json();
+//         profileName.textContent = profile.username || "Name not available";
+//         profileEmail.textContent = profile.email || "Email not available";
+//         profilePhone.textContent = profile.phone || "Phone not available";
+
+//         // Set a random profile picture for both the icon and the profile card
+//         const profileImageUrl = `https://i.pravatar.cc/150?u=${profile.email}`;
+//         profileImage.src = profileImageUrl;
+//         profileIconImage.src = profileImageUrl;
+//     } catch (error) {
+//         console.error("Error fetching profile details:", error);
+//     }
+
+//     // Toggle visibility of profile card when clicking on the profile icon
+//     profileIcon.addEventListener("click", () => {
+//         profileCard.classList.toggle("active");
+//     });
+
+//     // Logout functionality
+//     logoutButton.addEventListener("click", () => {
+//         localStorage.removeItem('token'); // Remove token from localStorage
+//         alert("Logged out successfully!");
+//         window.location.href = '/'; // Redirect to login page
+//     });
+//     // Close the profile card when clicking outside
+//     document.addEventListener("click", (event) => {
+//         if (!profileCard.contains(event.target) && !profileIcon.contains(event.target)) {
+//             profileCard.classList.remove("active");
+//         }
+//     });
+// });
+
+
+
+// const renderGallery = (images, section) => {
+  
+//     galleryTitle.textContent = `${section} Models`;
+
+//     galleryContainer.innerHTML = images
+//         .map(
+//             (src, index) =>
+//                 `<div class="box" style="background-image: url('${src}');">
+//                     <div class="overlay-label">Model ${index + 1}</div>
+//                     <button class="wishlist-btn" onclick="toggleWishlist('${src}')">❤️</button>
+//                 </div>`
+//         )
+//         .join("");
+
+ 
+//     galleryContainer.style.setProperty("--childs", images.length);
+// };

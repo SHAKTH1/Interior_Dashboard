@@ -1,0 +1,112 @@
+
+/* nav button arrows */
+/* #navigation {
+    position: fixed;
+    top: 10px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 20px;
+    z-index: 100;
+} */
+
+/* .nav-button {
+    padding: 12px 25px;
+    background-color: #444;
+    color: #f1f1f1;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+}
+
+.nav-button:disabled {
+    background-color: #333;
+    color: #666;
+    cursor: not-allowed;
+}
+
+.nav-button:not(:disabled):hover {
+    background-color: #6a1b9a;
+    color: #fff;
+    transform: scale(1.1);
+} */
+ 
+
+#navigation {
+    position: fixed;
+    top: 10px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    z-index: 100;
+  }
+  
+  /* Animated button styles */
+  .cta {
+    display: flex;
+    padding: 6px 16px;
+    text-decoration: none;
+    font-size: 18px;
+    color: white;
+    background: #6225e6;
+    transition: 0.5s;
+    box-shadow: 4px 4px 0 black;
+    transform: skewX(-15deg);
+    border: none;
+    cursor: pointer;
+  }
+  
+  .cta:focus {
+    outline: none;
+  }
+  
+  .cta:disabled {
+    background: #333;
+    cursor: not-allowed;
+  }
+  
+  .cta:hover {
+    box-shadow: 8px 8px 0 #fbc638;
+    transform: skewX(-15deg) scale(1.05);
+  }
+  
+  .cta .span {
+    transform: skewX(15deg);
+  }
+  
+  .cta .second {
+    width: 20px;
+    margin-left: 20px;
+    position: relative;
+    top: 15%;
+    transition: 0.3s;
+  }
+  
+  .cta:hover .second {
+    margin-left: 40px;
+  }
+  
+  .cta:hover .one,
+  .cta:hover .two,
+  .cta:hover .three {
+    animation: color_anim 1s infinite;
+  }
+  
+  /* Arrow animation */
+  @keyframes color_anim {
+    0% {
+      fill: white;
+    }
+    50% {
+      fill: #fbc638;
+    }
+    100% {
+      fill: white;
+    }
+  }
+  
