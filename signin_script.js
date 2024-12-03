@@ -1,3 +1,6 @@
+const API_BASE_URL = "https://marituss.netlify.app/";
+
+
 document.addEventListener('DOMContentLoaded', () => {
 const welcomeScreen = document.getElementById('welcome-screen');
 const registerScreen = document.getElementById('register-screen');
@@ -35,7 +38,7 @@ if (backToRegister) {
     });
 }
 
-// Handle registration
+
 // Handle registration
 registerButton.addEventListener('click', async () => {
     const inputs = document.querySelectorAll('#register-screen .input');
@@ -71,7 +74,7 @@ loginButton.addEventListener("click", async () => {
     }
 
     try {
-        const response = await fetch("/signin", {
+        const response = await fetch(`${API_BASE_URL}/signin`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ phone, password }),
