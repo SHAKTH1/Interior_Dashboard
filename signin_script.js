@@ -81,7 +81,7 @@ loginButton.addEventListener("click", async () => {
         if (response.ok) {
             localStorage.setItem("token", data.token); // Store token
             alert("Login successful!");
-            window.location.href = "/index.html"; // Redirect to dashboard
+            window.location.href = "/home.html"; // Redirect to dashboard
         } else {
             alert(data.message || "Login failed");
         }

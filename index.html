@@ -3,189 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interior Designer Dashboard</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-
-    <link rel="icon" href="favicon.ico" type="image/x-icon">
-    <link rel="stylesheet" href="./css/styles.css">
-    <link rel="stylesheet" href="./css/profilecard.css">
-    <link rel="stylesheet" href="./css/navbutton.css">
-    <link rel="stylesheet" href="./css/category.css">  
-    <link rel="stylesheet" href="./css/content.css">
-    <link rel="stylesheet" href="./css/wishlist.css">
-    <link rel="stylesheet" href="./css/progressbar.css">
-
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="./css/signin.css">
+    <title>Meritus Infrastructure LLP</title>
 </head>
 <body>
-  
+    <!-- Video Background -->
+    <div class="video-background">
+        <video autoplay muted loop id="background-video">
+            <source src="assets/video/home-vid.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    </div>
 
-     <!-- Background Video -->
-     <video autoplay muted loop id="background-video">
-        <source src="./assets/video/index-vid.mov" type="video/mp4">
-        Your browser does not support the video tag.
-    </video>
+    <div class="container">
+        <!-- Welcome Section -->
+        <div id="welcome-screen" class="screen">
+            <h1 class="title">Welcome to Meritus Infrastructure LLP</h1>
+        </div>
 
-
-    <div class="progress-bar-card">
-        <div id="progress-bar-container" class="progress-bar-container">
-            <div class="progress-line">
-                <div id="progress-point" class="progress-point"></div>
+        <!-- Register Section -->
+        <div id="register-screen" class="screen hidden">
+        <div class="form-container">
+            <h2 class="subtitle">Is this your first time? Register with us!</h2>
+            <div class="form-container">
+                <input type="text" placeholder="Enter Your Name" class="input">
+                <input type="text" placeholder="Enter Your Phone Number" class="input">
+                <input type="email" placeholder="Enter Your Email" class="input">
+                <input type="password" placeholder="Enter Your Password" class="input">
+                <button id="register-button" class="action-button">Register</button>
             </div>
-            <div class="progress-labels">
-                <span>Registered</span>
-                <span>Explore</span>
-                <span>Interio</span>
-                <span>Package</span>
-                <span>Add to Wishlist</span>
-                <span>Get Quote</span>
-            </div>
+            <p class="switch-text">
+                Already a user? <a id="show-login">Sign In</a>
+            </p>
         </div>
     </div>
-    
-    
-
-    <div id="navigation" class="flex justify-between items-center px-5 py-2 fixed top-0 w-full z-50">
-        <!-- Back Arrow Button -->
-        <button id="back-arrow" class="cta" disabled>
-          <span class="span">&larr; Back</span>
-          <span class="second">
-            <svg width="50px" height="20px" viewBox="0 0 66 43" version="1.1" xmlns="http://www.w3.org/2000/svg">
-              <g id="arrow" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                <path class="one" d="M..." fill="#FFFFFF"></path>
-              </g>
-            </svg>
-          </span>
-        </button>
-      
-        <!-- Next Arrow Button -->
-        <button id="next-arrow" class="cta">
-          <span class="span">Next &rarr;</span>
-          <span class="second">
-            <svg width="50px" height="20px" viewBox="0 0 66 43" version="1.1" xmlns="http://www.w3.org/2000/svg">
-              <g id="arrow" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                <path class="one" d="M..." fill="#FFFFFF"></path>
-              </g>
-            </svg>
-          </span>
-        </button>
-      </div>
-      
-
-
-
-
-       <!-- Profile Icon -->
-<div id="profile-icon">
-    <img id="profile-icon-img" src="" alt="Profile Icon">
-</div>
-
-
-<!-- Profile Card -->
-<div id="profile-card" class="hidden">
-    <div class="card">
-        <div class="profile-pic">
-            <img id="profile-image" src="" alt="Profile Picture">
-        </div>
-        <div class="content">
-            <span id="profile-name" class="name"></span>
-            <span id="profile-email" class="email"></span>
-            <span id="profile-phone" class="phone"></span>
-        </div>
-        <button id="logout-button" class="logout-btn">Logout</button>
-    </div>
-</div>
-
-<!-- Wishlist Icon -->
-<div id="wishlist-icon" class="wishlist-icon">
-    <img src="./assets/icons/wishlist.png" alt="Wishlist Icon" onclick="showWishlist()">
-</div>
-
-<!-- Wishlist Modal -->
-<div id="wishlist-modal" class="wishlist-modal hidden">
-    <div class="wishlist-modal-content">
-        <h2>My Wishlist</h2>
-        <div id="wishlist-container"></div>
-        <button onclick="closeWishlist()" class="close-wishlist">Close</button>
-    </div>
-</div>
-
-
-    <div id="landing-page" class="page">
-        <h1 class="welcome-text">Welcome to Posspole Dashboard</h1>
-        <button id="explore-button"   class="group group-hover:before:duration-500 group-hover:after:duration-500 after:duration-500 hover:border-rose-300 hover:before:[box-shadow:_20px_20px_20px_30px_#a21caf] duration-500 before:duration-500 hover:duration-500 underline underline-offset-2 hover:after:-right-8 hover:before:right-12 hover:before:-bottom-8 hover:before:blur hover:underline hover:underline-offset-4  origin-left hover:decoration-2 hover:text-rose-300 relative bg-neutral-800 h-16 w-64 border text-left p-3 text-gray-50 text-base font-bold rounded-lg  overflow-hidden  before:absolute before:w-12 before:h-12 before:content[''] before:right-1 before:top-1 before:z-10 before:bg-violet-500 before:rounded-full before:blur-lg  after:absolute after:z-10 after:w-20 after:h-20 after:content['']  after:bg-rose-300 after:right-8 after:top-3 after:rounded-full after:blur-lg">
-          Explore More
-        </button>
         
-        
-    </div>
-    
 
-    <div id="category-page" class="page hidden">
-       
-        <div class="card">
-            <p><span>Standard Interio</span></p>
-            <p><span>Premium Interio</span></p>
-            <p><span>Luxury Interio</span></p>
-        </div>
+       <!-- Login Section -->
+<div id="login-screen" class="screen hidden">
+    <h2 class="subtitle">Log In</h2>
+    <div class="form-container">
+        <input type="text" placeholder="Enter Your Phone Number" class="input">
+        <input type="password" placeholder="Enter Your Password" class="input">
+        <button id="login-button" class="action-button">Sign In</button>
     </div>
-    
-    
-
-    <div id="content-list-page" class="page hidden">
-        <ul class="content-list">
-            <li data-element="kitchen" class="fancy-list-item"><span>Kitchen</span></li>
-            <li data-element="master-bedroom" class="fancy-list-item"><span>Master Bedroom - Wardrobe</span></li>
-            <li data-element="kids-bedroom" class="fancy-list-item"><span>Kids Bedroom - Wardrobe</span></li>
-            <li data-element="guest-bedroom" class="fancy-list-item"><span>Guest Bedroom - Wardrobe</span></li>
-            <li data-element="dresser" class="fancy-list-item"><span>Dresser</span></li>
-            <li data-element="living-tv" class="fancy-list-item"><span>Living – TV Wall</span></li>
-            <li data-element="living-feature" class="fancy-list-item"><span>Living – Feature Wall</span></li>
-            <li data-element="pooja-room" class="fancy-list-item"><span>Pooja Room</span></li>
-            <li data-element="crockery" class="fancy-list-item"><span>Crockery</span></li>
-            <li data-element="partition-wall" class="fancy-list-item"><span>Partition Wall</span></li>
-            <li data-element="shoe-rack" class="fancy-list-item"><span>Shoe Rack</span></li>
-            <li data-element="utility" class="fancy-list-item"><span>Utility</span></li>
-            <li data-element="vanity" class="fancy-list-item"><span>Vanity</span></li>
-        </ul>
-    </div>
-    
-
-    <div id="gallery-page" class="page hidden">
-        <div id="gallery" class="gallery-container"></div>
-        <!-- <button id="back-button" class="button">Back</button> -->
-      
+    <button id="back-to-register" class="action-button back-button">Back</button>
+</div>
 
     </div>
 
-    <script src="./script.js"></script>
-    <script src="./profilecard.js"></script>
-    <script src="./wishlist.js"></script>
-    <script src="./progressbar.js"></script>
-
+    <script src="./signin_script.js"></script>
 </body>
 </html>
-
-
-
-<!-- 
-    <div id="category-page" class="page hidden">
-        <div class="grid">
-            <div class="grid-item" data-category="standard">Standard Interio</div>
-            <div class="grid-item" data-category="premium">Premium Interio</div>
-            <div class="grid-item" data-category="luxury">Luxury Interio</div>
-        </div>
-    </div> -->
-
-
-        
-<!--     
-    <div id="landing-page" class="page">
-        <h1 class="welcome-text">Welcome to Posspole Dashboard</h1>
-        <button id="explore-button" class="button">Explore More</button>
-    </div> -->
-
-      <!-- <div id="navigation" class="hidden">
-        <button id="back-arrow" class="nav-button" disabled>&larr; Back</button>
-        <button id="next-arrow" class="nav-button" disabled>Next &rarr;</button>
-    </div> -->

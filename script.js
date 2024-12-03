@@ -38,7 +38,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 function redirectToLogin() {
     alert("Session expired. Please log in again.");
     localStorage.removeItem("token");
-    window.location.href = "/signin.html";
+    window.location.href = "/index.html";
 }
 
 
