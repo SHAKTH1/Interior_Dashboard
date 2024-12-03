@@ -1,72 +1,93 @@
-const banner = document.getElementById("banner");
-const loginContainer = document.getElementById("login-container");
-const signupContainer = document.getElementById("signup-container");
-const loginToggle = document.getElementById("login-form-toggler");
-const signupToggle = document.getElementById("signup-form-toggler");
+document.addEventListener('DOMContentLoaded', () => {
+const welcomeScreen = document.getElementById('welcome-screen');
+const registerScreen = document.getElementById('register-screen');
+const loginScreen = document.getElementById('login-screen');
+const registerButton = document.getElementById('register-button');
+const loginButton = document.getElementById('login-button');
+const showLogin = document.getElementById('show-login');
+const backToRegister = document.getElementById('back-to-register');
 
-// Toggle between login and signup
-signupToggle.addEventListener('click', () => {
-    banner.style.transform = "translateX(-100%)";
-    loginContainer.style.transform = "scale(0)";
-    signupContainer.style.transform = "scale(1)";
-});
-
-loginToggle.addEventListener('click', () => {
-    banner.style.transform = "translateX(0%)";
-    signupContainer.style.transform = "scale(0)";
-    loginContainer.style.transform = "scale(1)";
-});
-
-// Handle Signup
-document.querySelector('.signup-container button').addEventListener('click', async () => {
-    const username = document.querySelector('.signup-container input[placeholder="Enter Your Username"]').value;
-    const email = document.querySelector('.signup-container input[placeholder="Enter Your Email Address"]').value;
-    const phone = document.querySelector('.signup-container input[placeholder="Enter Your Phone Number"]').value;
-    const password = document.querySelector('.signup-container input[placeholder="Enter Your Password"]').value;
-
-    const response = await fetch('/signup', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, email, phone, password }),
+// Function to transition between screens
+const showScreen = (screen) => {
+    const screens = [welcomeScreen, registerScreen, loginScreen];
+    screens.forEach((s) => {
+        s.classList.remove('active');
     });
+    screen.classList.add('active');
+};
 
-    const data = await response.json();
-    alert(data.message);
+// Initial animation: Show Welcome Screen
+setTimeout(() => {
+    showScreen(welcomeScreen);
+    setTimeout(() => {
+        showScreen(registerScreen);
+    }, 3000); // 3 seconds for welcome screen
+}, 500); // Initial delay
+
+// Switch to login screen
+showLogin.addEventListener('click', () => {
+    showScreen(loginScreen);
 });
-document.querySelector('.login-container button').addEventListener('click', async () => {
-    const username = document.querySelector('.login-container input[placeholder="Enter Your Username"]').value;
-    const password = document.querySelector('.login-container input[placeholder="Enter Your Password"]').value;
 
-    const response = await fetch('/signin', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password }),
+if (backToRegister) {
+    backToRegister.addEventListener('click', () => {
+        showScreen(registerScreen); // Go back to the register screen
     });
-
-    const data = await response.json();
-    if (response.status === 200) {
-        alert(data.message);
-
-        // Store the token in localStorage
-        localStorage.setItem('token', data.token);
-
-        // Redirect to the dashboard with the token as a query parameter
-        window.location.href = `/dashboard?token=${data.token}`;
-    } else {
-        alert(data.message);
-    }
-});
-
-// Add token to fetch requests
-function fetchWithToken(url, options = {}) {
-    const token = localStorage.getItem('token');
-    if (!token) {
-        console.error("No token found in localStorage");
-        return Promise.reject("No token found");
-    }
-
-    const headers = options.headers || {};
-    headers['Authorization'] = `Bearer ${token}`;
-
-    return fetch(url, { ...options, headers });
 }
+
+// Handle registration
+// Handle registration
+registerButton.addEventListener('click', async () => {
+    const inputs = document.querySelectorAll('#register-screen .input');
+    const [username, phone, email, password] = Array.from(inputs).map((input) => input.value); // Change "name" to "username"
+
+    if (!username || !phone || !email || !password) {
+        alert('All fields are required');
+        return;
+    }
+
+    try {
+        const response = await fetch('/signup', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, phone, email, password }), // Ensure "username" is used here
+        });
+
+        const data = await response.json();
+        alert(data.message);
+    } catch (error) {
+        console.error("Error during registration:", error);
+    }
+});
+
+// Handle login
+loginButton.addEventListener('click', async () => {
+    const inputs = document.querySelectorAll('#login-screen .input');
+    const [phone, password] = Array.from(inputs).map((input) => input.value);
+
+    if (!phone || !password) {
+        alert('All fields are required');
+        return;
+    }
+
+    try {
+        const response = await fetch('/signin', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ phone, password }), // Send "phone" instead of "username"
+        });
+
+        const data = await response.json();
+        if (response.status === 200) {
+            localStorage.setItem('token', data.token);
+            alert(data.message);
+            window.location.href = '/index.html';
+        } else {
+            alert(data.message);
+        }
+    } catch (error) {
+        console.error("Error during login:", error);
+    }
+});
+
+});

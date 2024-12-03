@@ -26,8 +26,7 @@ mongoose.connect(process.env.MONGODB_URI, {
   app.use(bodyParser.urlencoded({ extended: true }));
   
 
-
-app.post('/signup', async (req, res) => {
+  app.post('/signup', async (req, res) => {
     try {
         const { username, email, phone, password } = req.body;
 
@@ -48,15 +47,15 @@ app.post('/signup', async (req, res) => {
     }
 });
 
-app.post('/signin',  async (req, res) => {
+app.post('/signin', async (req, res) => {
     try {
-        const { username, password } = req.body;
+        const { phone, password } = req.body; // Use "phone" instead of "username"
 
-        if (!username || !password) {
+        if (!phone || !password) {
             return res.status(400).json({ message: 'All fields are required' });
         }
 
-        const user = await User.findOne({ username, password });
+        const user = await User.findOne({ phone, password }); // Use "phone" for lookup
         if (!user) {
             return res.status(401).json({ message: 'Invalid credentials' });
         }
@@ -73,6 +72,7 @@ app.post('/signin',  async (req, res) => {
         res.status(500).json({ message: 'Internal server error' });
     }
 });
+
 
 app.get('/api/profile', authenticateToken, async (req, res) => {
     try {

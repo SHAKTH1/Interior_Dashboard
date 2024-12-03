@@ -12,8 +12,12 @@ const authenticateToken = (req, res, next) => {
 
     jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
         if (err) {
+            if (err.name === 'TokenExpiredError') {
+                console.error("JWT Token has expired:", err);
+                return res.status(401).json({ message: 'Session expired. Please log in again.' });
+            }
             console.error("JWT Verification Failed:", err);
-            return res.status(403).json({ message: 'Invalid or expired token' });
+            return res.status(403).json({ message: 'Invalid token' });
         }
 
         req.user = user;
@@ -22,3 +26,5 @@ const authenticateToken = (req, res, next) => {
 };
 
 module.exports = authenticateToken;
+
+

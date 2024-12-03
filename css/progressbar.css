@@ -1,0 +1,101 @@
+/* Progress Bar Card */
+.progress-bar-card {
+    position: fixed;
+    top: 10px;
+    left: 14%;
+    width: 73%;
+    background: rgba(255, 255, 255, 0.1); /* Softer semi-transparent background */
+    backdrop-filter: blur(12px); /* Enhanced blur effect */
+    border-radius: 12px;
+    padding: 33px;
+    z-index: 1000;
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3); /* Softer shadow for depth */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+
+/* Progress Bar Container */
+.progress-bar-container {
+    display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 95%;
+        top: 0px;
+}
+
+
+/* Progress Line */
+.progress-line {
+    width: 100%;
+    height: 6px;
+    background: #ccc; /* Base color for uncompleted line */
+    position: relative;
+    margin: 10px 0;
+    overflow: hidden;
+    border-radius: 3px;
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+}
+
+
+/* Progress Line Active */
+.progress-line::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0; /* Dynamically adjusted width */
+    height: 100%;
+    background: linear-gradient(90deg, #8e44ad, #d4a5de); /* Vibrant gradient for the active portion */
+    transition: width 0.5s ease-in-out; /* Smooth transition */
+    z-index: 1;
+    border-radius: 8px;
+}
+
+/* Progress Point */
+.progress-point {
+    height: 30px; /* Larger size for emphasis */
+    width: 30px;
+    background: radial-gradient(circle, #ffffff, #6c3483); /* Gradient for the point */
+    border: 5px solid white; /* White highlight border */
+    border-radius: 50%;
+    position: absolute;
+    top: -11px; /* Centered above the line */
+    left: 0; /* Dynamically adjusted left position */
+    transition: left 0.5s ease-in-out, transform 0.3s ease; /* Smooth movement and slight pop */
+    z-index: 2;
+    box-shadow: 0 0 15px #6c3483, 0 0 25px rgba(108, 52, 131, 0.5); /* Glow effect */
+}
+
+.progress-point:hover {
+    transform: scale(1.2); /* Slight zoom on hover for interactivity */
+    box-shadow: 0 0 25px #6c3483, 0 0 40px rgba(108, 52, 131, 0.7); /* Enhanced glow on hover */
+}
+
+/* Progress Labels */
+.progress-labels {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    font-size: 1rem; /* Slightly larger font for better readability */
+    color: #e0e0e0; /* Softer neutral color */
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6); /* Slight shadow for text clarity */
+    font-family: 'Poppins', sans-serif; /* Modern, clean font */
+}
+
+.progress-labels span {
+    transition: color 0.5s ease, font-size 0.3s ease, transform 0.3s ease; /* Smooth transitions */
+}
+
+/* Active Label */
+.progress-labels span.active {
+    color: #6c3483; /* Highlight color */
+    font-weight: bold;
+    font-size: 1.2rem; /* Larger font for active label */
+    transform: scale(1.1); /* Slightly larger active label */
+    text-shadow: 0 3px 6px rgba(0, 0, 0, 0.4), 0 1px 2px #6c3483; /* Enhanced shadow for active label */
+}
+
+
+

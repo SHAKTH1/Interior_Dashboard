@@ -1,5 +1,37 @@
-//script.js  
+
 console.log("JavaScript Loaded");
+
+// Utility function to include token in fetch headers
+function fetchWithToken(url, options = {}) {
+    const token = localStorage.getItem('token'); // Retrieve token from localStorage
+    if (!token) {
+        console.error("No token found in localStorage");
+        return Promise.reject("No token found");
+    }
+
+    const headers = options.headers || {};
+    headers['Authorization'] = `Bearer ${token}`;
+
+    // Include headers in the options
+    return fetch(url, { ...options, headers });
+}
+
+const token = localStorage.getItem('token');
+if (!token) {
+    alert('Unauthorized access!');
+    window.location.href = '/'; // Redirect to login
+}
+
+
+// Get buttons and navigation container
+const exploreButton = document.getElementById("explore-button");
+const categoryItems = document.querySelectorAll("#category-page .card p");
+const backArrow = document.getElementById("back-arrow");
+const nextArrow = document.getElementById("next-arrow");
+const navigation = document.getElementById("navigation");
+const galleryContainer = document.getElementById("gallery");
+const contentListContainer = document.querySelector(".content-list");
+const backgroundVideo = document.getElementById('background-video');
 
 // Map pages to their DOM elements
 const pages = {
@@ -9,11 +41,38 @@ const pages = {
     gallery: document.getElementById("gallery-page"),
 };
 
+// Function to show or hide the background video
+const handleBackgroundVideo = (pageKey) => {
+    if (pageKey === 'gallery') {
+        backgroundVideo.classList.add('hidden'); // Hide the video when viewing models
+    } else {
+        backgroundVideo.classList.remove('hidden'); // Show the video on other pages
+    }
+};
+
+if (exploreButton) {
+    // Add click event to the Explore button
+    exploreButton.addEventListener("click", () => {
+        console.log("Explore button clicked");
+        showPage("category");
+    });
+} else {
+    console.error("Explore button not found in the DOM.");
+}
+
+// Gallery title container
+const galleryTitle = document.createElement("h2");
+galleryTitle.className = "gallery-title";
+galleryTitle.textContent = ""; // Title will be updated dynamically
+galleryContainer.insertAdjacentElement("beforebegin", galleryTitle);
+
+
+
 // Fetch images dynamically from the server
 const fetchImagesFromServer = async (category, section) => {
     try {
         console.log(`Fetching images for category: ${category}, section: ${section}`);
-        const response = await fetch(`/api/images?category=${category}&section=${section}`);
+        const response = await fetchWithToken(`/api/images?category=${category}&section=${section}`);
         if (!response.ok) {
             throw new Error("Failed to fetch images");
         }
@@ -26,14 +85,6 @@ const fetchImagesFromServer = async (category, section) => {
     }
 };
 
-// Get buttons and navigation container
-const exploreButton = document.getElementById("explore-button");
-const categoryItems = document.querySelectorAll(".grid-item");
-const backArrow = document.getElementById("back-arrow");
-const nextArrow = document.getElementById("next-arrow");
-const navigation = document.getElementById("navigation");
-const galleryContainer = document.getElementById("gallery");
-const contentListContainer = document.querySelector(".content-list");
 
 // Track the current page and selected category
 let currentPage = "landing";
@@ -46,8 +97,8 @@ const contentList = [
     { element: "kids-bedroom", label: "Kids Bedroom - Wardrobe" },
     { element: "guest-bedroom", label: "Guest Bedroom - Wardrobe" },
     { element: "dresser", label: "Dresser" },
-    { element: "living-tv", label: "Living – TV Wall" },
-    { element: "living-feature", label: "Living – Feature Wall" },
+    { element: "living-tv", label: "Living - TV Wall" },
+    { element: "living-feature", label: "Living  Feature Wall" },
     { element: "pooja-room", label: "Pooja Room" },
     { element: "crockery", label: "Crockery" },
     { element: "partition-wall", label: "Partition Wall" },
@@ -61,56 +112,125 @@ const renderContentList = () => {
     contentListContainer.innerHTML = contentList
         .map(
             (item) =>
-                `<li data-element="${item.element}" class="content-item">${item.label}</li>`
+               `<li data-element="${item.element}" class="fancy-list-item">
+                    <span>${item.label}</span>
+                 </li>`
         )
         .join("");
 
     // Add event listeners to dynamically generated list items
-    const contentItems = document.querySelectorAll(".content-item");
+    const contentItems = document.querySelectorAll(".fancy-list-item");
     contentItems.forEach((item) => {
         item.addEventListener("click", async (e) => {
-            const section = e.target.dataset.element; // Get the section (e.g., kitchen, dining, living)
+            const section = e.currentTarget.
+            dataset.element; // Get the section
             console.log(`Selected section: ${section}`);
 
-            // Fetch images from the server for the selected category and section
+            // Fetch images dynamically
             const models = await fetchImagesFromServer(selectedCategory, section);
 
-            // Populate the gallery with models
-        // Populate the gallery with models
-            galleryContainer.innerHTML = models
-            .map(
-                (src, index) =>
-                    `<div class="box" style="background-image: url('${src}')" data-index="${index}"></div>`
-            )
-            .join("");
+            if (models.length > 0) {
+                renderGallery(models, section); // Render gallery with fetched images
+            } else {
+                galleryContainer.innerHTML = "<p>No images available</p>";
+            }
 
-
-            // Show the gallery page
+            // Navigate to gallery page
             showPage("gallery");
         });
     });
 };
 
-// Function to show a specific page
+// Function to render the gallery and attach click events for full-screen
+const renderGalleryImages = (images, section) => {
+    const galleryElement = document.getElementById("gallery");
+
+    galleryElement.innerHTML = images
+        .map(
+            (src, index) => `
+            <div class="image-box">
+                <img 
+                    src="${src}" 
+                    class="gallery-thumbnail" 
+                    alt="${section} - Model ${index + 1}" 
+                />
+                <div class="image-overlay-label">Model ${index + 1}</div>
+                <button 
+                    class="full-screen-button" 
+                    data-src="${src}" 
+                    aria-label="View Full Screen">
+                    Full Screen
+                </button>
+            </div>`
+        )
+        .join("");
+
+    // Attach event listener to "Full Screen" buttons
+    const fullScreenButtons = galleryElement.querySelectorAll(".full-screen-button");
+    fullScreenButtons.forEach((button) => {
+        button.addEventListener("click", (e) => {
+            const imageSrc = e.currentTarget.dataset.src;
+            console.log(`Full Screen button clicked for image: ${imageSrc}`);
+            showFullScreenImage(imageSrc); // Open image in full-screen mode
+        });
+    });
+};
+const showFullScreenImage = (imageSrc) => {
+    // Ensure the image source URL is valid and properly encoded
+    const safeSrc = encodeURI(imageSrc);
+
+    // Create a full-screen container
+    const fullScreenDiv = document.createElement("div");
+    fullScreenDiv.className = "image-full-screen-container";
+    fullScreenDiv.innerHTML = `
+        <div class="full-screen-overlay">
+            <img src="${safeSrc}" class="image-full-screen" alt="Full Screen Model" />
+            <button class="image-close-button" id="closeFullScreen">Close</button>
+        </div>
+    `;
+
+    // Append the container to the body
+    document.body.appendChild(fullScreenDiv);
+
+    // Add event listener to the close button
+    document
+        .getElementById("closeFullScreen")
+        .addEventListener("click", closeFullScreenImage);
+};
+
+
+const closeFullScreenImage = () => {
+    const fullScreenDiv = document.querySelector(".image-full-screen-container");
+    if (fullScreenDiv) {
+        fullScreenDiv.remove(); // Remove the full-screen container from the DOM
+    }
+};
+
+
+// Modified showPage function
 const showPage = (pageKey) => {
     // Hide all pages
-    Object.values(pages).forEach((page) => page.classList.add("hidden"));
+    Object.values(pages).forEach((page) => page.classList.add('hidden'));
     // Show the selected page
-    pages[pageKey].classList.remove("hidden");
+    pages[pageKey].classList.remove('hidden');
     currentPage = pageKey;
 
     // Show or hide navigation
-    navigation.classList.toggle("hidden", pageKey === "landing");
+    navigation.classList.toggle('hidden', pageKey === 'landing');
 
     // Enable or disable navigation buttons
-    backArrow.disabled = pageKey === "landing";
-    nextArrow.disabled = pageKey === "gallery";
+    backArrow.disabled = pageKey === 'landing';
+    nextArrow.disabled = pageKey === 'gallery';
+
+    // Handle background video visibility
+    handleBackgroundVideo(pageKey);
 
     // Render content list when navigating to the content list page
-    if (pageKey === "contentList") {
+    if (pageKey === 'contentList') {
         renderContentList();
     }
 };
+
 
 // Show the category page and navigation when "Explore More" is clicked
 exploreButton.addEventListener("click", () => {
@@ -119,9 +239,9 @@ exploreButton.addEventListener("click", () => {
 });
 
 // Add event listeners for category items
-categoryItems.forEach((item) => {
-    item.addEventListener("click", (e) => {
-        selectedCategory = e.target.dataset.category; // Set the selected category
+categoryItems.forEach((item, index) => {
+    item.addEventListener("click", () => {
+        selectedCategory = ["standard", "premium", "luxury"][index]; // Map the index to category
         console.log(`Selected category: ${selectedCategory}`);
         showPage("contentList");
     });
@@ -140,3 +260,242 @@ nextArrow.addEventListener("click", () => {
     else if (currentPage === "contentList") showPage("gallery");
 });
 
+
+
+body {
+    font-family: 'Roboto', Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+.page {
+    animation: fadeIn 1s ease forwards;
+}
+
+.page.hidden {
+    display: none;
+}
+
+.welcome-text {
+    text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
+    animation: slideDown 1s ease forwards;
+}
+
+/* Overwriting .button style to avoid conflicts */
+.button,
+.grid-item,
+.content-list li {
+    @apply bg-gradient-to-br from-gray-800 via-gray-700 to-gray-800 text-white shadow-lg rounded-lg hover:bg-gray-700 focus:outline-none transition-all ease-in-out duration-300;
+}
+
+/* Overwriting Tailwind button-specific styles */
+.button {
+    padding: 12px 25px;
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+/* Tailwind Grid Compatibility */
+.grid {
+    display: grid;
+    gap: 30px;
+    margin-top: 20px;
+}
+
+.content-list li {
+    padding: 20px;
+    border: 2px solid #444;
+    background: linear-gradient(135deg, #2c2c2c, #3a3a3a);
+}
+
+.content-list li:hover {
+    background: linear-gradient(135deg, #444, #5c5c5c);
+    transform: scale(1.05);
+}
+
+
+.gallery-title {
+    text-align: center;
+    color: #f1f1f1;
+    margin-bottom: 20px;
+    font-size: 2rem;
+    text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+.model-label {
+    color: #ffffff;
+    font-size: 1rem;
+    text-align: center;
+    margin-top: 10px;
+    text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.7);
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 5px;
+    border-radius: 5px;
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80%;
+}
+
+
+.gallery-container {
+    --childs: 5; /* Number of images */
+    --gap: 20px; /* Gap between images */
+    background: linear-gradient(135deg, #121212, #1c1c1c);
+    border: none; /* Removed container border */
+    width: 95%; /* Increased container width */
+    display: flex;
+    gap: var(--gap);
+    margin: 50px auto;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    border-radius: 20px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+    padding: 20px;
+    max-width: 1400px; /* Ensure container does not exceed a max width */
+    height: 500px; /* Adjust container height */
+}
+
+.gallery-container .box {
+    position: relative;
+    flex: 1;  /* Equal width for all images initially */
+    height: 100%; /* Match container height */
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    transition: flex 0.3s ease-in-out, transform 0.3s ease-in-out;
+    cursor: pointer;
+    border-radius: 15px; /* Soft rounded corners */
+    border: none; /* Removed box borders */
+    min-width: 200px;
+}
+
+.gallery-container .overlay-label {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    background: rgba(0, 0, 0, 0.6);
+    color: #fff;
+    font-size: 14px;
+    padding: 5px 10px;
+    border-radius: 5px;
+    text-transform: capitalize;
+}
+
+.gallery-container .box:hover {
+    flex: 3; /* Expand hovered box significantly */
+    transform: scale(1.05); /* Slight zoom effect */
+}
+
+.gallery-container:has(.box:hover) .box:not(:hover) {
+    flex: 0.5; /* Shrink non-hovered boxes */
+    opacity: 0.6; /* Slight fade for non-hovered boxes */
+    transition: flex 0.5s ease, opacity 0.5s ease; /* Smooth transition for width and opacity */
+}
+
+.gallery-container .box:active {
+    transform: scale(0.98); /* Slight shrink effect on click */
+    opacity: 1; /* Maintain full opacity */
+}
+
+/* Full-screen image styles */
+.full-screen-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.9);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.full-screen-image {
+    max-width: 90%;
+    max-height: 90%;
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    animation: zoomIn 0.3s ease-in-out;
+}
+
+.close-button {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: #ff4c4c;
+    color: white;
+    font-size: 18px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.close-button:hover {
+    background: #e03b3b;
+}
+
+/* Zoom-in animation */
+@keyframes zoomIn {
+    from {
+        transform: scale(0.8);
+        opacity: 0.5;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.full-screen-image {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain; /* Ensures the image fits within the container without distortion */
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    animation: zoomIn 0.3s ease-in-out;
+}
+
+
+
+/* nav button arrows */
+#navigation {
+    position: fixed;
+    top: 10px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 20px;
+    z-index: 100;
+}
+
+.nav-button {
+    padding: 12px 25px;
+    background-color: #444;
+    color: #f1f1f1;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+}
+
+.nav-button:disabled {
+    background-color: #333;
+    color: #666;
+    cursor: not-allowed;
+}
+
+.nav-button:not(:disabled):hover {
+    background-color: #6a1b9a;
+    color: #fff;
+    transform: scale(1.1);
+}

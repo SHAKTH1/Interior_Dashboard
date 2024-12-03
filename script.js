@@ -6,6 +6,8 @@ function fetchWithToken(url, options = {}) {
     const token = localStorage.getItem('token'); // Retrieve token from localStorage
     if (!token) {
         console.error("No token found in localStorage");
+        alert("Session expired. Please log in again.");
+        window.location.href = '/'; // Redirect to login
         return Promise.reject("No token found");
     }
 
@@ -13,13 +15,19 @@ function fetchWithToken(url, options = {}) {
     headers['Authorization'] = `Bearer ${token}`;
 
     // Include headers in the options
-    return fetch(url, { ...options, headers });
-}
-
-const token = localStorage.getItem('token');
-if (!token) {
-    alert('Unauthorized access!');
-    window.location.href = '/'; // Redirect to login
+    return fetch(url, { ...options, headers })
+        .then((response) => {
+            if (response.status === 401) {
+                alert('Session expired. Please log in again.');
+                window.location.href = '/'; // Redirect to login
+                throw new Error('Unauthorized');
+            }
+            return response;
+        })
+        .catch((error) => {
+            console.error("Error in fetchWithToken:", error);
+            throw error;
+        });
 }
 
 
@@ -31,6 +39,7 @@ const nextArrow = document.getElementById("next-arrow");
 const navigation = document.getElementById("navigation");
 const galleryContainer = document.getElementById("gallery");
 const contentListContainer = document.querySelector(".content-list");
+const backgroundVideo = document.getElementById('background-video');
 
 // Map pages to their DOM elements
 const pages = {
@@ -40,6 +49,14 @@ const pages = {
     gallery: document.getElementById("gallery-page"),
 };
 
+// Function to show or hide the background video
+const handleBackgroundVideo = (pageKey) => {
+    if (pageKey === 'gallery') {
+        backgroundVideo.classList.add('hidden'); // Hide the video when viewing models
+    } else {
+        backgroundVideo.classList.remove('hidden'); // Show the video on other pages
+    }
+};
 
 if (exploreButton) {
     // Add click event to the Explore button
@@ -58,6 +75,7 @@ galleryTitle.textContent = ""; // Title will be updated dynamically
 galleryContainer.insertAdjacentElement("beforebegin", galleryTitle);
 
 
+
 // Fetch images dynamically from the server
 const fetchImagesFromServer = async (category, section) => {
     try {
@@ -74,7 +92,6 @@ const fetchImagesFromServer = async (category, section) => {
         return [];
     }
 };
-
 
 
 // Track the current page and selected category
@@ -133,80 +150,95 @@ const renderContentList = () => {
 };
 
 // Function to render the gallery and attach click events for full-screen
-// Function to render the gallery and attach click events for full-screen
 const renderGalleryImages = (images, section) => {
     const galleryElement = document.getElementById("gallery");
 
     galleryElement.innerHTML = images
         .map(
             (src, index) => `
-            <div class="image-box" style="background-image: url('${src}');">
+            <div class="image-box">
                 <img 
                     src="${src}" 
                     class="gallery-thumbnail" 
                     alt="${section} - Model ${index + 1}" 
                 />
                 <div class="image-overlay-label">Model ${index + 1}</div>
+                <button 
+                    class="full-screen-button" 
+                    data-src="${src}" 
+                    aria-label="View Full Screen">
+                    Full Screen
+                </button>
             </div>`
         )
         .join("");
 
-    // Attach click event listener to images for full-screen view
-    const galleryThumbnails = document.querySelectorAll(".gallery-thumbnail");
-    galleryThumbnails.forEach((thumbnail) => {
-        thumbnail.addEventListener("click", () => showFullScreenImage(thumbnail.src));
+    // Attach event listener to "Full Screen" buttons
+    const fullScreenButtons = galleryElement.querySelectorAll(".full-screen-button");
+    fullScreenButtons.forEach((button) => {
+        button.addEventListener("click", (e) => {
+            const imageSrc = e.currentTarget.dataset.src;
+            console.log(`Full Screen button clicked for image: ${imageSrc}`);
+            showFullScreenImage(imageSrc); // Open image in full-screen mode
+        });
     });
 };
-
-// Function to display an image in full screen
 const showFullScreenImage = (imageSrc) => {
-    // Ensure the image source URL is handled correctly
+    // Ensure the image source URL is valid and properly encoded
     const safeSrc = encodeURI(imageSrc);
 
     // Create a full-screen container
     const fullScreenDiv = document.createElement("div");
     fullScreenDiv.className = "image-full-screen-container";
     fullScreenDiv.innerHTML = `
-        <img src="${safeSrc}" class="image-full-screen" alt="Full Screen Model" />
-        <button class="image-close-button" onclick="closeFullScreenImage()">Close</button>
+        <div class="full-screen-overlay">
+            <img src="${safeSrc}" class="image-full-screen" alt="Full Screen Model" />
+            <button class="image-close-button" id="closeFullScreen">Close</button>
+        </div>
     `;
 
     // Append the container to the body
     document.body.appendChild(fullScreenDiv);
+
+    // Add event listener to the close button
+    document
+        .getElementById("closeFullScreen")
+        .addEventListener("click", closeFullScreenImage);
 };
 
-// Function to close the full-screen view
+
 const closeFullScreenImage = () => {
     const fullScreenDiv = document.querySelector(".image-full-screen-container");
     if (fullScreenDiv) {
-        fullScreenDiv.remove();
+        fullScreenDiv.remove(); // Remove the full-screen container from the DOM
     }
 };
 
 
-
-
-
-// Function to show a specific page
+// Modified showPage function
 const showPage = (pageKey) => {
     // Hide all pages
-    Object.values(pages).forEach((page) => page.classList.add("hidden"));
+    Object.values(pages).forEach((page) => page.classList.add('hidden'));
     // Show the selected page
-    pages[pageKey].classList.remove("hidden");
+    pages[pageKey].classList.remove('hidden');
     currentPage = pageKey;
 
     // Show or hide navigation
-    navigation.classList.toggle("hidden", pageKey === "landing");
+    navigation.classList.toggle('hidden', pageKey === 'landing');
 
     // Enable or disable navigation buttons
-    backArrow.disabled = pageKey === "landing";
-    nextArrow.disabled = pageKey === "gallery";
+    backArrow.disabled = pageKey === 'landing';
+    nextArrow.disabled = pageKey === 'gallery';
+
+    // Handle background video visibility
+    handleBackgroundVideo(pageKey);
 
     // Render content list when navigating to the content list page
-    if (pageKey === "contentList") {
+    if (pageKey === 'contentList') {
         renderContentList();
     }
 };
+
 
 // Show the category page and navigation when "Explore More" is clicked
 exploreButton.addEventListener("click", () => {

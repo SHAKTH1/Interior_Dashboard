@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Interior Designer Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
     <link rel="icon" href="favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="./css/styles.css">
     <link rel="stylesheet" href="./css/profilecard.css">
@@ -11,14 +13,38 @@
     <link rel="stylesheet" href="./css/category.css">  
     <link rel="stylesheet" href="./css/content.css">
     <link rel="stylesheet" href="./css/wishlist.css">
+    <link rel="stylesheet" href="./css/progressbar.css">
 
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body>
-    <!-- <div id="navigation" class="hidden">
-        <button id="back-arrow" class="nav-button" disabled>&larr; Back</button>
-        <button id="next-arrow" class="nav-button" disabled>Next &rarr;</button>
-    </div> -->
+  
+
+     <!-- Background Video -->
+     <video autoplay muted loop id="background-video">
+        <source src="./assets/video/index-vid.mov" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+
+
+    <div class="progress-bar-card">
+        <div id="progress-bar-container" class="progress-bar-container">
+            <div class="progress-line">
+                <div id="progress-point" class="progress-point"></div>
+            </div>
+            <div class="progress-labels">
+                <span>Registered</span>
+                <span>Explore</span>
+                <span>Interio</span>
+                <span>Package</span>
+                <span>Add to Wishlist</span>
+                <span>Get Quote</span>
+            </div>
+        </div>
+    </div>
+    
+    
+
     <div id="navigation" class="flex justify-between items-center px-5 py-2 fixed top-0 w-full z-50">
         <!-- Back Arrow Button -->
         <button id="back-arrow" class="cta" disabled>
@@ -84,12 +110,6 @@
     </div>
 </div>
 
-    
-<!--     
-    <div id="landing-page" class="page">
-        <h1 class="welcome-text">Welcome to Posspole Dashboard</h1>
-        <button id="explore-button" class="button">Explore More</button>
-    </div> -->
 
     <div id="landing-page" class="page">
         <h1 class="welcome-text">Welcome to Posspole Dashboard</h1>
@@ -100,14 +120,7 @@
         
     </div>
     
-<!-- 
-    <div id="category-page" class="page hidden">
-        <div class="grid">
-            <div class="grid-item" data-category="standard">Standard Interio</div>
-            <div class="grid-item" data-category="premium">Premium Interio</div>
-            <div class="grid-item" data-category="luxury">Luxury Interio</div>
-        </div>
-    </div> -->
+
     <div id="category-page" class="page hidden">
        
         <div class="card">
@@ -148,5 +161,31 @@
     <script src="./script.js"></script>
     <script src="./profilecard.js"></script>
     <script src="./wishlist.js"></script>
+    <script src="./progressbar.js"></script>
+
 </body>
 </html>
+
+
+
+<!-- 
+    <div id="category-page" class="page hidden">
+        <div class="grid">
+            <div class="grid-item" data-category="standard">Standard Interio</div>
+            <div class="grid-item" data-category="premium">Premium Interio</div>
+            <div class="grid-item" data-category="luxury">Luxury Interio</div>
+        </div>
+    </div> -->
+
+
+        
+<!--     
+    <div id="landing-page" class="page">
+        <h1 class="welcome-text">Welcome to Posspole Dashboard</h1>
+        <button id="explore-button" class="button">Explore More</button>
+    </div> -->
+
+      <!-- <div id="navigation" class="hidden">
+        <button id="back-arrow" class="nav-button" disabled>&larr; Back</button>
+        <button id="next-arrow" class="nav-button" disabled>Next &rarr;</button>
+    </div> -->
