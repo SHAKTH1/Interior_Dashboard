@@ -1,5 +1,32 @@
-
 console.log("JavaScript Loaded");
+
+document.addEventListener("DOMContentLoaded", async () => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+        redirectToLogin();
+        return;
+    }
+
+    try {
+        const response = await fetch("/api/profile", {
+            headers: { Authorization: `Bearer ${token}` },
+        });
+        if (!response.ok) {
+            console.error("Token expired or invalid");
+            redirectToLogin();
+        }
+    } catch (error) {
+        console.error("Error during token validation:", error);
+        redirectToLogin();
+    }
+});
+
+function redirectToLogin() {
+    alert("Session expired. Please log in again.");
+    localStorage.removeItem("token");
+    window.location.href = "/signin.html";
+}
+
 
 // Utility function to include token in fetch headers
 function fetchWithToken(url, options = {}) {
@@ -28,6 +55,7 @@ function fetchWithToken(url, options = {}) {
             console.error("Error in fetchWithToken:", error);
             throw error;
         });
+        
 }
 
 

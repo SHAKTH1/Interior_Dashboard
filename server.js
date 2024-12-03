@@ -47,6 +47,28 @@ mongoose.connect(process.env.MONGODB_URI, {
     }
 });
 
+app.post("/refresh", (req, res) => {
+    const authHeader = req.headers["authorization"];
+    const token = authHeader && authHeader.split(" ")[1];
+
+    if (!token) {
+        return res.status(401).json({ message: "No token provided" });
+    }
+
+    jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+        if (err) {
+            return res.status(403).json({ message: "Invalid or expired token" });
+        }
+
+        // Generate a new token
+        const newToken = jwt.sign({ id: user.id, username: user.username }, process.env.JWT_SECRET, {
+            expiresIn: "1h",
+        });
+
+        res.status(200).json({ token: newToken });
+    });
+});
+
 app.post('/signin', async (req, res) => {
     try {
         const { phone, password } = req.body; // Use "phone" instead of "username"
@@ -163,9 +185,10 @@ app.get("/", (_, res) => {
     res.sendFile(path.join(__dirname, "signin.html"));
 });
 
-
-
-
+app.post("/logout", (req, res) => {
+    // Simply clear the token on the client-side
+    res.status(200).json({ message: "Logged out successfully" });
+});
 
 // Serve static files from the "assets" directory
 app.use("/assets", express.static(path.join(__dirname, "assets")));

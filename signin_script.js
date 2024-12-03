@@ -61,33 +61,35 @@ registerButton.addEventListener('click', async () => {
 });
 
 // Handle login
-loginButton.addEventListener('click', async () => {
-    const inputs = document.querySelectorAll('#login-screen .input');
+loginButton.addEventListener("click", async () => {
+    const inputs = document.querySelectorAll("#login-screen .input");
     const [phone, password] = Array.from(inputs).map((input) => input.value);
 
     if (!phone || !password) {
-        alert('All fields are required');
+        alert("All fields are required");
         return;
     }
 
     try {
-        const response = await fetch('/signin', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ phone, password }), // Send "phone" instead of "username"
+        const response = await fetch("/signin", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ phone, password }),
         });
 
         const data = await response.json();
-        if (response.status === 200) {
-            localStorage.setItem('token', data.token);
-            alert(data.message);
-            window.location.href = '/index.html';
+        if (response.ok) {
+            localStorage.setItem("token", data.token); // Store token
+            alert("Login successful!");
+            window.location.href = "/index.html"; // Redirect to dashboard
         } else {
-            alert(data.message);
+            alert(data.message || "Login failed");
         }
     } catch (error) {
         console.error("Error during login:", error);
+        alert("An error occurred during login. Please try again.");
     }
 });
+
 
 });
