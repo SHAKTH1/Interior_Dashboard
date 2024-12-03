@@ -11,8 +11,22 @@ document.addEventListener("DOMContentLoaded", async () => {
         const response = await fetch("/api/profile", {
             headers: { Authorization: `Bearer ${token}` },
         });
-        if (!response.ok) {
-            console.error("Token expired or invalid");
+
+        if (response.status === 401 || response.status === 403) {
+            // Try refreshing the token if expired
+            const refreshResponse = await fetch("/refresh", {
+                method: "POST",
+                headers: { Authorization: `Bearer ${token}` },
+            });
+
+            if (refreshResponse.ok) {
+                const { token: newToken } = await refreshResponse.json();
+                localStorage.setItem("token", newToken); // Update token
+            } else {
+                // Redirect to login if refresh fails
+                redirectToLogin();
+            }
+        } else if (!response.ok) {
             redirectToLogin();
         }
     } catch (error) {

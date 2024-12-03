@@ -47,6 +47,7 @@ mongoose.connect(process.env.MONGODB_URI, {
     }
 });
 
+
 app.post("/refresh", (req, res) => {
     const authHeader = req.headers["authorization"];
     const token = authHeader && authHeader.split(" ")[1];
@@ -61,13 +62,16 @@ app.post("/refresh", (req, res) => {
         }
 
         // Generate a new token
-        const newToken = jwt.sign({ id: user.id, username: user.username }, process.env.JWT_SECRET, {
-            expiresIn: "1h",
-        });
+        const newToken = jwt.sign(
+            { id: user.id, username: user.username },
+            process.env.JWT_SECRET,
+            { expiresIn: "1h" }
+        );
 
         res.status(200).json({ token: newToken });
     });
 });
+
 
 app.post('/signin', async (req, res) => {
     try {

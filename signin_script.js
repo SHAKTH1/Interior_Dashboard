@@ -90,6 +90,4 @@ loginButton.addEventListener("click", async () => {
         alert("An error occurred during login. Please try again.");
     }
 });
-
-
 });
