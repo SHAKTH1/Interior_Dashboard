@@ -1,4 +1,4 @@
-const API_BASE_URL = "https://marituss.netlify.app/";
+
 
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -74,7 +74,7 @@ loginButton.addEventListener("click", async () => {
     }
 
     try {
-        const response = await fetch(`${API_BASE_URL}/signin`, {
+        const response = await fetch(`/signin`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ phone, password }),
