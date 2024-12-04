@@ -13,11 +13,6 @@ const PORT = 3005;
 
 const cors = require('cors');
 
-app.use(cors({
-    origin: "https://marituss.netlify.app", // Your Netlify domain
-    methods: ["GET", "POST"],
-    credentials: true,
-}));
 
 
 // Connect to MongoDB
@@ -190,12 +185,12 @@ app.use((req, res, next) => {
 
 // Dashboard Route with JWT Authentication
 app.get('/dashboard', authenticateToken, (_, res) => {
-    res.sendFile(path.join(__dirname, 'index.html'));
+    res.sendFile(path.join(__dirname, 'home.html'));
 });
 
 // Serve the signin.html file for the root path
 app.get("/", (_, res) => {
-    res.sendFile(path.join(__dirname, "signin.html"));
+    res.sendFile(path.join(__dirname, "index.html"));
 });
 
 app.post("/logout", (req, res) => {
