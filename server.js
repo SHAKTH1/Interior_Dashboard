@@ -11,6 +11,15 @@ const authenticateToken = require('./authenticateToken');
 const app = express();
 const PORT = 3005;
 
+const cors = require('cors');
+
+app.use(cors({
+    origin: "https://marituss.netlify.app", // Your Netlify domain
+    methods: ["GET", "POST"],
+    credentials: true,
+}));
+
+
 // Connect to MongoDB
 mongoose.connect(process.env.MONGODB_URI, {
     useNewUrlParser: true,
