@@ -168,7 +168,7 @@ body {
     width: 95%; /* Increased container width */
     display: flex;
     gap: var(--gap);
-    margin: 50px auto;
+    margin: 20px auto;
     justify-content: center;
     align-items: center;
     overflow: hidden;

@@ -7,7 +7,7 @@
     background: rgba(255, 255, 255, 0.1); /* Softer semi-transparent background */
     backdrop-filter: blur(12px); /* Enhanced blur effect */
     border-radius: 12px;
-    padding: 33px;
+    padding: 10px;
     z-index: 1000;
     box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3); /* Softer shadow for depth */
     display: flex;
