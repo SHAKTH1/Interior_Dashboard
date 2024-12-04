@@ -1,3 +1,4 @@
+const API_BASE_URL = "http://localhost:3005";
 
 
 
@@ -74,7 +75,7 @@ loginButton.addEventListener("click", async () => {
     }
 
     try {
-        const response = await fetch(`/signin`, {
+        const response = await fetch(`${API_BASE_URL}/signin`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ phone, password }),

@@ -13,6 +13,11 @@ const PORT = 3005;
 
 const cors = require('cors');
 
+app.use(cors({
+    origin: "https://interior-dashboard.vercel.app", // Your frontend domain
+    methods: ["GET", "POST", "OPTIONS"],
+    credentials: true,
+}));
 
 
 // Connect to MongoDB
