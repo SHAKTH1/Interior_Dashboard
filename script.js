@@ -162,14 +162,14 @@ const renderContentList = () => {
     contentListContainer.innerHTML = contentList
         .map(
             (item) =>
-               `<li data-element="${item.element}" class="fancy-list-item">
+               `<li data-element="${item.element}" class="card-con">
                     <span>${item.label}</span>
                  </li>`
         )
         .join("");
 
     // Add event listeners to dynamically generated list items
-    const contentItems = document.querySelectorAll(".fancy-list-item");
+    const contentItems = document.querySelectorAll(".card-con");
     contentItems.forEach((item) => {
         item.addEventListener("click", async (e) => {
             const section = e.currentTarget.
