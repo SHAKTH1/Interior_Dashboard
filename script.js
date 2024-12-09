@@ -312,6 +312,34 @@ nextArrow.addEventListener("click", () => {
 
 
 
+document.addEventListener("DOMContentLoaded", () => {
+    const cards = document.querySelectorAll(".card-con");
+
+    cards.forEach((card) => {
+        const backgroundUrl = card.getAttribute("data-background");
+        if (backgroundUrl) {
+            const img = new Image();
+            img.src = backgroundUrl;
+
+            img.onload = () => {
+                card.style.backgroundImage = `url(${backgroundUrl})`;
+                console.log(`Background set for: ${card.querySelector(".heading").textContent}`);
+            };
+
+            img.onerror = () => {
+                console.error(`Failed to load image: ${backgroundUrl}`);
+                card.style.backgroundColor = "gray"; // Fallback color
+            };
+        } else {
+            console.warn(`No background URL found for card: ${card.querySelector(".heading").textContent}`);
+        }
+    });
+});
+
+
+
+
+
 // // Function to display image in full screen
 // const openFullScreen = (imageSrc) => {
 //     // Ensure the image source URL is handled correctly
