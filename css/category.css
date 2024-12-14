@@ -1,5 +1,5 @@
 /* Container for all cards */
-.card-container {
+#category-page .card-container {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -8,7 +8,7 @@
 }
 
 /* Outer card for gradient effect */
-.card {
+#category-page .card {
     width: 322px;
     height: 435px;
     background-image: linear-gradient(163deg, #1a1a1a 0%, #3700ff 100%);
@@ -21,7 +21,7 @@
 }
 
 /* Inner card for content */
-.card2 {
+#category-page .card2 {
     width: 320px;
     height: 432px;
     background-color: #1a1a1a;
@@ -35,19 +35,19 @@
 }
 
 /* Inner card hover effect */
-.card2:hover {
+#category-page .card2:hover {
     transform: scale(0.98); /* Slight shrink effect */
     border-radius: 20px; /* Ensure smooth edges on hover */
 }
 
 /* Outer card hover effect */
-.card:hover {
+#category-page .card:hover {
     box-shadow: 0px 0px 40px 5px rgba(0, 255, 117, 0.4), 0px 0px 60px 10px rgba(55, 0, 255, 0.3); /* Enhanced glow */
     transform: scale(1.03); /* Slight enlargement */
 }
 
 /* Image inside the card */
-.card-image {
+#category-page .card-image {
     width: 100%;
     height: 100%; /* Adjust height as needed */
     object-fit: cover; /* Maintain aspect ratio and fill the area */
@@ -57,7 +57,7 @@
 
 
 /* Text inside the cards */
-.card-text {
+#category-page .card-text {
     font-family: 'Futura LT', sans-serif;
     font-weight: 300; /* Slim appearance */
     color: white;
