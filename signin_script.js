@@ -1,4 +1,7 @@
-const API_BASE_URL = "http://localhost:3005";
+const API_BASE_URL = window.location.hostname === "localhost" 
+    ? "http://localhost:3005" 
+    : "https://interior-dashboard.onrender.com";
+
 
 
 

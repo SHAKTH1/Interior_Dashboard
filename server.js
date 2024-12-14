@@ -17,6 +17,12 @@ const cors = require('cors');
 app.use(express.json());
 
 
+app.use(cors({
+    origin: ["http://localhost:3000", "https://interior-dashboard.onrender.com"], // Allow specific origins
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+}));
+
 app.post("/api/send-wishlist", sendWishlistEmails);
 
 // Connect to MongoDB
