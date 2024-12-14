@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Interior Designer Dashboard</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-
+    <link href="https://fonts.cdnfonts.com/css/futura-lt" rel="stylesheet">
+    
     <link rel="icon" href="favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="./css/styles.css">
     <link rel="stylesheet" href="./css/profilecard.css">
@@ -33,12 +34,12 @@
                 <div id="progress-point" class="progress-point"></div>
             </div>
             <div class="progress-labels">
-                <span>Registered</span>
-                <span>Explore</span>
-                <span>Interio</span>
-                <span>Package</span>
-                <span>Add to Wishlist</span>
-                <span>Get Quote</span>
+                <span>REGISTERED</span>
+                <span>EXPLORE</span>
+                <span>INTERIO</span>
+                <span>PACKAGE</span>
+                <span>ADD TO WISHLIST</span>
+                <span>GET QUOTE</span>
             </div>
         </div>
     </div>
@@ -112,27 +113,52 @@
 
 
     <div id="landing-page" class="page">
-        <h1 class="welcome-text">Welcome to Posspole Dashboard</h1>
-        <button id="explore-button"   class="group group-hover:before:duration-500 group-hover:after:duration-500 after:duration-500 hover:border-rose-300 hover:before:[box-shadow:_20px_20px_20px_30px_#a21caf] duration-500 before:duration-500 hover:duration-500 underline underline-offset-2 hover:after:-right-8 hover:before:right-12 hover:before:-bottom-8 hover:before:blur hover:underline hover:underline-offset-4  origin-left hover:decoration-2 hover:text-rose-300 relative bg-neutral-800 h-16 w-64 border text-left p-3 text-gray-50 text-base font-bold rounded-lg  overflow-hidden  before:absolute before:w-12 before:h-12 before:content[''] before:right-1 before:top-1 before:z-10 before:bg-violet-500 before:rounded-full before:blur-lg  after:absolute after:z-10 after:w-20 after:h-20 after:content['']  after:bg-rose-300 after:right-8 after:top-3 after:rounded-full after:blur-lg">
-          Explore More
-        </button>
+        <h1 class="welcome-text">Welcome to MARITUS Dashboard</h1>
+        <button
+        id="explore-button"
+        class="group group-hover:before:duration-500 group-hover:after:duration-500 after:duration-500 hover:border-blue-500 hover:before:[box-shadow:_20px_20px_20px_30px_#2563eb] duration-500 before:duration-500 hover:duration-500 underline underline-offset-2 hover:after:-right-8 hover:before:right-12 hover:before:-bottom-8 hover:before:blur hover:underline hover:underline-offset-4 origin-left hover:decoration-2 hover:text-blue-500 relative bg-black h-16 w-64 border text-left p-3 text-gray-200 text-base font-bold rounded-lg overflow-hidden before:absolute before:w-12 before:h-12 before:content[''] before:right-1 before:top-1 before:z-10 before:bg-gray-400 before:rounded-full before:blur-lg after:absolute after:z-10 after:w-20 after:h-20 after:content[''] after:bg-blue-500 after:right-8 after:top-3 after:rounded-full after:blur-lg"
+        style="font-family: 'Futura LT', sans-serif;font-weight: 300;letter-spacing:7.5px; text-align:center;"
         
+    >
+        Explore More
+    </button>
+          
+          <div class="logo-container">
+            <img src="./assets/icons/meritus-blue-01.png" alt="Maritus Logo" class="logo">
+        </div>
         
     </div>
     
 
     <div id="category-page" class="page hidden">
-       
-        <div class="card">
-            <p><span>Standard Interio</span></p>
-            <p><span>Premium Interio</span></p>
-            <p><span>Luxury Interio</span></p>
+        <div class="card-container">
+            <div class="card">
+                <div class="card2">
+                    <img src="./assets/images/standard/standard interio.png" alt="Standard Interio" class="card-image" />
+                    <!-- <p class="card-text">Standard Interio</p> -->
+                </div>
+            </div>
+            <div class="card">
+                <div class="card2">
+                    <img src="./assets/images/premium/premium.png" alt="Premium Interio" class="card-image" />
+                    <!-- <p class="card-text">Premium Interio</p> -->
+                </div>
+            </div>
+            <div class="card">
+                <div class="card2">
+                    <img src="./assets/images/luxury/luxury.png" alt="Luxury Interio" class="card-image" />
+                    <!-- <p class="card-text">Luxury Interio</p> -->
+                </div>
+            </div>
         </div>
     </div>
     
     
+    
+    
+    
 
-    <div id="content-list-page" class="page hidden">
+    <!-- <div id="content-list-page" class="page hidden">
         <ul class="content-list">
             <li class="card-con" data-background="/assets/images/kitchen.jpg">
                 <p class="heading">Kitchen</p>
@@ -175,9 +201,16 @@
                 <p class="heading">Vanity</p>
             </li>
         </ul>
-    </div>
+    </div> -->
     
+    <section class="section-4">
+        <div class="title-container hidden" id="dreamPackageTitle">
+            <h2 class="section-title">Select your dream package!</h2>
+        </div>
+        <div class="row" id="contentListContainer"></div>
+    </section>
     
+      
 
     <div id="gallery-page" class="page hidden">
         <div id="gallery" class="gallery-container"></div>
@@ -190,6 +223,9 @@
     <script src="./profilecard.js"></script>
     <script src="./wishlist.js"></script>
     <script src="./progressbar.js"></script>
+    
+<script src="https://unpkg.com/ionicons@4.5.10-0/dist/ionicons.js"></script>
+
 
 </body>
 </html>

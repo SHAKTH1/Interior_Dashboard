@@ -1,43 +1,67 @@
-/* Scoped category card styles */
-#category-page .card {
-    width: 447px;
-    height: 476px;
-    border-radius: 4px;
-    background: #212121;
-    display: flex;
-    gap: 8px;
-    padding: 0.4em;
-}
-
-#category-page .card p {
-    height: 100%;
-    flex: 1;
-    overflow: hidden;
-    cursor: pointer;
-    border-radius: 2px;
-    transition: all 0.5s;
-    background: #212121;
-    border: 1px solid #ff5a91;
+/* Container for all cards */
+.card-container {
     display: flex;
     justify-content: center;
     align-items: center;
+    gap: 30px; /* Space between the cards */
+    margin-top: 50px;
 }
 
-#category-page .card p:hover {
-    flex: 4;
+/* Outer card for gradient effect */
+.card {
+    width: 322px;
+    height: 435px;
+    background-image: linear-gradient(163deg, #1a1a1a 0%, #3700ff 100%);
+    border-radius: 26px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.3s ease;
+    box-shadow: 0px 0px 10px 1px #1e3a8a;
 }
 
-#category-page .card p span {
-    min-width: 14em;
-    padding: 0.5em;
+/* Inner card for content */
+.card2 {
+    width: 320px;
+    height: 432px;
+    background-color: #1a1a1a;
+    border-radius: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.2s ease;
+    overflow: hidden; 
+    position: relative; 
+}
+
+/* Inner card hover effect */
+.card2:hover {
+    transform: scale(0.98); /* Slight shrink effect */
+    border-radius: 20px; /* Ensure smooth edges on hover */
+}
+
+/* Outer card hover effect */
+.card:hover {
+    box-shadow: 0px 0px 40px 5px rgba(0, 255, 117, 0.4), 0px 0px 60px 10px rgba(55, 0, 255, 0.3); /* Enhanced glow */
+    transform: scale(1.03); /* Slight enlargement */
+}
+
+/* Image inside the card */
+.card-image {
+    width: 100%;
+    height: 100%; /* Adjust height as needed */
+    object-fit: cover; /* Maintain aspect ratio and fill the area */
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+}
+
+
+/* Text inside the cards */
+.card-text {
+    font-family: 'Futura LT', sans-serif;
+    font-weight: 300; /* Slim appearance */
+    color: white;
+    font-size: 1.2rem;
     text-align: center;
-    transform: rotate(-90deg);
-    transition: all 0.5s;
-    text-transform: uppercase;
-    color: #ff568e;
-    letter-spacing: 0.1em;
-}
-
-#category-page .card p:hover span {
-    transform: rotate(0);
+    line-height: 1.5; /* Adjust spacing between lines */
 }

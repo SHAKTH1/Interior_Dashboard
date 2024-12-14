@@ -1,5 +1,7 @@
+@import url('https://fonts.cdnfonts.com/css/futura-lt');
+
 body {
-    font-family: 'Futura New', Arial, sans-serif;
+    font-family: 'Futura LT', Arial, sans-serif;
     margin: 0;
     padding: 0;
     display: flex;
@@ -21,12 +23,17 @@ body {
 }
 
 .welcome-text {
+    font-family: 'Futura LT', sans-serif;
     font-size: 3rem;
     margin-bottom: 20px;
     color: #f1f1f1;
     text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
     animation: slideDown 1s ease forwards;
+    line-height: 1.2;
+    letter-spacing: 7.5px;
+    font-weight: 100;
 }
+
 
 /* Background video styles */
 #background-video {
@@ -38,25 +45,40 @@ body {
     object-fit: cover;
     z-index: -1; /* Ensure it is behind all other content */
     opacity: 1;
-    transition: opacity 1s ease-in-out;
+    filter: blur(7px); /* Add blur effect */
+    transition: opacity 1s ease-in-out, filter 0.5s ease-in-out; /* Smooth transition */
 }
 
 /* Hide the video when content list is reached */
 #background-video.hidden {
     opacity: 0; /* Fade out */
     pointer-events: none; /* Prevent interaction */
+    filter: blur(0px); /* Remove blur when hidden */
 }
 
+.logo-container {
+    text-align: center;
+    margin-top: -10%;
+}
+
+.logo {
+    width: 33%;
+    height: auto;
+    display: inline-block;
+    margin-bottom: -20%;
+    margin-left: -5%;
+}
 
 
 .gallery-title {
+    font-family: 'Futura LT', sans-serif;
     text-align: center;
-    color: #f1f1f1;
-    margin-bottom: 20px;
+    color: #333;
     font-size: 2rem;
-    text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
-    margin-top: 12%;
+    margin-top: 20px;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
 }
+
 
 .model-label {
     color: #ffffff;
@@ -74,71 +96,166 @@ body {
     width: 80%;
 }
 
-
-.gallery-container {
-    --childs: 5; /* Number of images */
-    --gap: 20px; /* Gap between images */
-    background: linear-gradient(135deg, #121212, #1c1c1c);
-    border: none; /* Removed container border */
-    width: 95%; /* Increased container width */
+/* Custom gallery container */
+.custom-gallery-container {
+    max-width: 1400px;
+    margin: 0px auto;
     display: flex;
-    gap: var(--gap);
-    margin: 20px auto;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 47px;
+    padding: 66px;
+    background: #f9f9f9;
+    border-radius: 13px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    margin-top: 9%;
+
+}
+
+/* Gallery item (figure) */
+.custom-gallery-item {
+    idth: 269px;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    height: 60vh;
+}
+
+
+.custom-gallery-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Image inside the gallery item */
+.custom-gallery-item img {
+    width: 100%;
+    height: 290px;
+    object-fit: cover;
+    border-bottom: 1px solid #ddd;
+}
+
+/* Hover effect: image */
+.custom-gallery-item:hover img {
+    transform: none;
+    filter: none;
+    opacity: 1;
+
+}
+.custom-gallery-item .content {
+    padding: 15px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* Overlay content */
+.custom-gallery-item div {
+    background-color: #1a1a1a;
+    width: 100%;
+    padding: 0px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    height: 55vh;
+}
+
+.custom-gallery-item:hover div {
+    opacity: 1;
+}
+
+/* Overlay text styles */
+.custom-gallery-item h3 {
+    font-family: 'Futura LT', sans-serif;
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: 300;
+    margin: 0;
+    text-transform: uppercase;
+}
+
+.custom-gallery-item h3 span {
+    font-weight: 700;
+    display: block;
+    font-size: 1.2rem;
+    color: #1e3a8a;
+}
+
+/* Fullscreen button (optional) */
+.custom-full-screen-button {
+    padding: 10px;
+    font-size: 14px;
+    background-color: #1e3a8a;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.custom-full-screen-button:hover {
+    background-color: #0056b3;
+}
+
+/* Grayscale background when hovering */
+.custom-gallery-item div::before,
+.custom-gallery-item div::after {
+    position: absolute;
+    content: '';
+    width: 0;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    opacity: 0.8;
+    top: 50%;
+    transform: translateY(-50%);
+    transition: all 0.35s ease-in-out;
+}
+
+.custom-gallery-item div::before {
+    left: -150%;
+}
+
+.custom-gallery-item div::after {
+    right: -150%;
+}
+
+.custom-gallery-item:hover div::before,
+.custom-gallery-item:hover div::after {
+    width: 150%;
+}
+
+/* Fullscreen container */
+.image-full-screen-container {
+    font-family: 'Futura LT', sans-serif;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.9);
+    display: flex;
     justify-content: center;
     align-items: center;
-    overflow: hidden;
-    border-radius: 20px;
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+    z-index: 9999;
     padding: 20px;
-    max-width: 1400px; /* Ensure container does not exceed a max width */
-    height: 500px; /* Adjust container height */
+    box-sizing: border-box;
 }
 
-.gallery-container .box {
-    position: relative;
-    flex: 1;  /* Equal width for all images initially */
-    height: 100%; /* Match container height */
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center;
-    transition: flex 0.3s ease-in-out, transform 0.3s ease-in-out;
-    cursor: pointer;
-    border-radius: 15px; /* Soft rounded corners */
-    border: none; /* Removed box borders */
-    min-width: 200px;
+/* Fullscreen image styling */
+.image-full-screen {
+    max-width: 35%;
+    max-height: 80%;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    margin-left: 29%;
 }
-
-.gallery-container .overlay-label {
-    position: absolute;
-    bottom: 10px;
-    left: 10px;
-    background: rgba(0, 0, 0, 0.6);
-    color: #fff;
-    font-size: 14px;
-    padding: 5px 10px;
-    border-radius: 5px;
-    text-transform: capitalize;
-}
-
-.gallery-container .box:hover {
-    flex: 3; /* Expand hovered box significantly */
-    transform: scale(1.05); /* Slight zoom effect */
-}
-
-.gallery-container:has(.box:hover) .box:not(:hover) {
-    flex: 0.5; /* Shrink non-hovered boxes */
-    opacity: 0.6; /* Slight fade for non-hovered boxes */
-    transition: flex 0.5s ease, opacity 0.5s ease; /* Smooth transition for width and opacity */
-}
-
-.gallery-container .box:active {
-    transform: scale(0.98); /* Slight shrink effect on click */
-    opacity: 1; /* Maintain full opacity */
-}
-
-
-
-
 
 /* Close button styling */
 .image-close-button {
@@ -159,41 +276,4 @@ body {
 .image-close-button:hover {
     background-color: #f44336;
     color: #fff;
-}
-
-/* Gallery "Full Screen" button styling */
-.full-screen-button {
-    margin-top: 10px;
-    padding: 5px 10px;
-    background-color: #007BFF;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 14px;
-    transition: background-color 0.3s ease;
-}
-
-.full-screen-button:hover {
-    background-color: #0056b3;
-}
-/* Full-screen image container */
-.image-full-screen-container {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.9);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 9999;
-}
-
-/* Full-screen image styling */
-.image-full-screen {
-    max-width: 90%;
-    max-height: 90%;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
 }

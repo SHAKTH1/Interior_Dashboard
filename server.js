@@ -7,17 +7,17 @@ const path = require("path");
 const jwt = require('jsonwebtoken');
 const fs = require("fs"); 
 const authenticateToken = require('./authenticateToken');
+const { sendWishlistEmails } = require("./wishlistEmailHandler");
+const router = express.Router();
 
 const app = express();
 const PORT = 3005;
 
 const cors = require('cors');
+app.use(express.json());
 
-app.use(cors({
-    origin: "https://interior-dashboard.onrender.com", // Your frontend domain
-    methods: ["GET", "POST", "OPTIONS"],
-    credentials: true,
-}));
+
+app.post("/api/send-wishlist", sendWishlistEmails);
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGODB_URI, {
@@ -177,6 +177,32 @@ app.get("/api/images", authenticateToken, (req, res) => {
     });
 });
 
+
+router.get("/api/get-user-details", async (req, res) => {
+    try {
+        const token = req.headers.authorization.split(" ")[1];
+        if (!token) {
+            return res.status(401).json({ message: "Unauthorized" });
+        }
+
+        // Decode the token (assuming JWT is used)
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const userId = decoded.id;
+
+        // Fetch user details from DB
+        const user = await User.findById(userId).select("name email phone");
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        res.status(200).json(user);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Server error" });
+    }
+});
+
+module.exports = router;
 
 // Middleware for token injection
 app.use((req, res, next) => {

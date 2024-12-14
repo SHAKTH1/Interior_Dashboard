@@ -35,8 +35,10 @@
     transform: scale(1.1);
 } */
  
+@import url('https://fonts.cdnfonts.com/css/futura-lt');
 
 #navigation {
+  font-family: 'Futura LT', Arial, sans-serif;
     position: fixed;
     top: 10px;
     width: 100%;
@@ -53,7 +55,7 @@
     text-decoration: none;
     font-size: 18px;
     color: white;
-    background: #6225e6;
+    background: #212121;
     transition: 0.5s;
     box-shadow: 4px 4px 0 black;
     transform: skewX(-15deg);
@@ -71,11 +73,12 @@
   }
   
   .cta:hover {
-    box-shadow: 8px 8px 0 #fbc638;
+    box-shadow: 8px 8px 0 #acacac;
     transform: skewX(-15deg) scale(1.05);
   }
   
   .cta .span {
+    font-family: 'Futura LT', Arial, sans-serif;
     transform: skewX(15deg);
   }
   
@@ -103,7 +106,7 @@
       fill: white;
     }
     50% {
-      fill: #fbc638;
+      fill: #acacac;
     }
     100% {
       fill: white;

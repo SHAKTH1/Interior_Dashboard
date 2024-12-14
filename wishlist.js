@@ -26,10 +26,10 @@ document.addEventListener("DOMContentLoaded", () => {
         const galleryTitle = document.querySelector(".gallery-title");
         const galleryContainer = document.getElementById("gallery");
         galleryTitle.textContent = `${section} Models`;
-    
+
         galleryContainer.innerHTML = images
-        .map(
-            (src, index) => `
+            .map(
+                (src, index) => `
             <div class="box" style="background-image: url('${src}');">
                 <button 
                     class="wishlist-btn" 
@@ -39,53 +39,12 @@ document.addEventListener("DOMContentLoaded", () => {
                 </button>
                 <div class="overlay-label">Model ${index + 1}</div>
             </div>`
-        )
-        .join("");
-    
-        // Remove any previously attached event listeners by replacing the container
-        const newGalleryContainer = galleryContainer.cloneNode(true);
-        galleryContainer.parentNode.replaceChild(newGalleryContainer, galleryContainer);
-    
-          // Reattach event listener to wishlist buttons
-          const wishlistButtons = document.querySelectorAll(".wishlist-btn");
-          wishlistButtons.forEach((button) => {
-              button.addEventListener("click", (event) => {
-                  event.stopPropagation(); // Prevent parent click events
-                  const modelSrc = button.getAttribute("data-src");
-                  const modelDetails = button.getAttribute("data-details");
-                  toggleWishlist(modelSrc, modelDetails);
-              });
-          });
-    };
-    
-   // Show the wishlist modal
-   const showWishlist = () => {
-    const wishlistModal = document.getElementById("wishlist-modal");
-    const wishlistContainer = document.getElementById("wishlist-container");
-
-    if (wishlist.length > 0) {
-        // Render wishlist items with details
-        wishlistContainer.innerHTML = wishlist
-            .map(
-                (item, index) => `
-            <div class="wishlist-item">
-                <img src="${item.src}" alt="Wishlist Model ${index + 1}" />
-                <div class="wishlist-details">
-                    <p>${item.details}</p>
-                    <button 
-                        class="remove-btn" 
-                        data-src="${item.src}" 
-                        data-details="${item.details}">
-                        Remove
-                    </button>
-                </div>
-            </div>`
             )
             .join("");
 
-        // Attach event listeners to "Remove" buttons
-        const removeButtons = document.querySelectorAll(".remove-btn");
-        removeButtons.forEach((button) => {
+        // Reattach event listener to wishlist buttons
+        const wishlistButtons = document.querySelectorAll(".wishlist-btn");
+        wishlistButtons.forEach((button) => {
             button.addEventListener("click", (event) => {
                 event.stopPropagation(); // Prevent parent click events
                 const modelSrc = button.getAttribute("data-src");
@@ -93,14 +52,115 @@ document.addEventListener("DOMContentLoaded", () => {
                 toggleWishlist(modelSrc, modelDetails);
             });
         });
-    } else {
-        // Show a message when wishlist is empty
-        wishlistContainer.innerHTML = "<p>Your wishlist is empty!</p>";
-    }
+            // Event listener for wishlist cart icon
+    const wishlistCartIcon = document.getElementById("wishlist-icon");
+    wishlistCartIcon?.addEventListener("click", () => {
+        updateProgressBar(5); // Move to "Get Quote"
+    });
+       
+    };
 
-    // Show the modal
-    wishlistModal.classList.remove("hidden");
-};
+    const fetchUserDetails = async () => {
+        try {
+            const response = await fetch('/api/profile', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}` // Add token from localStorage
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to fetch user details');
+            }
+
+            const userDetails = await response.json();
+            console.log("User Details:", userDetails);
+            return userDetails;
+        } catch (error) {
+            console.error("Error:", error);
+            throw error;
+        }
+    };
+
+    const showWishlist = () => {
+        const wishlistModal = document.getElementById("wishlist-modal");
+        const wishlistContainer = document.getElementById("wishlist-container");
+
+        if (wishlist.length > 0) {
+            wishlistContainer.innerHTML = wishlist
+                .map(
+                    (item, index) => `
+                <div class="wishlist-item">
+                    <img src="${item.src}" alt="Wishlist Model ${index + 1}" />
+                    <div class="wishlist-details">
+                        <p>${item.details}</p>
+                        <button 
+                            class="remove-btn" 
+                            data-src="${item.src}" 
+                            data-details="${item.details}">
+                            Remove
+                        </button>
+                    </div>
+                </div>`
+                )
+                .join("");
+
+            // Add Get Quote button
+            wishlistContainer.insertAdjacentHTML(
+                "beforeend",
+                `<button id="get-quote-btn" class="get-quote-btn">Get Quote</button>`
+            );
+
+            // Attach event listener to Get Quote button
+            document.getElementById("get-quote-btn").addEventListener("click", async () => {
+                try {
+                    const userDetails = await fetchUserDetails();
+                    const { username, email, phone } = userDetails;
+
+                    // Send the wishlist and user details to the server
+                    const response = await fetch("/api/send-wishlist", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                            userName: username,
+                            userEmail: email,
+                            userPhone: phone,
+                            wishlist,
+                        }),
+                    });
+
+                    if (response.ok) {
+                        alert("Quote request sent successfully!");
+                    } else {
+                        alert("Failed to send quote request.");
+                    }
+                } catch (error) {
+                    console.error("Error:", error);
+                    alert("An error occurred while sending your request.");
+                }
+            });
+
+            // Attach event listeners to "Remove" buttons
+            const removeButtons = document.querySelectorAll(".remove-btn");
+            removeButtons.forEach((button) => {
+                button.addEventListener("click", (event) => {
+                    event.stopPropagation(); // Prevent parent click events
+                    const modelSrc = button.getAttribute("data-src");
+                    const modelDetails = button.getAttribute("data-details");
+                    toggleWishlist(modelSrc, modelDetails);
+                });
+            });
+        } else {
+            // Show a message when wishlist is empty
+            wishlistContainer.innerHTML = "<p>Your wishlist is empty!</p>";
+        }
+
+        // Show the modal
+        wishlistModal.classList.remove("hidden");
+    };
 
     // Close the wishlist modal
     const closeWishlist = () => {

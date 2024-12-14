@@ -1,4 +1,4 @@
-.content-list {
+/* .content-list {
   list-style-type: none;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -37,8 +37,6 @@
   will-change: transform;
   transition: transform 0.5s;
   cursor: pointer;
-
-  /* Add dynamic background */
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -61,4 +59,138 @@
 
 .card-con:hover .heading {
   transform: translateZ(50px);
+} */
+
+@import url('https://fonts.cdnfonts.com/css/futura-lt');
+
+.hidden {
+  display: none;
 }
+/* Style for the title container */
+.title-container {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* Style for the title */
+.section-title {
+  font-family: 'Futura LT', Arial, sans-serif;
+  font-size: 3rem;
+  color: #ffffff;
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+  margin: 0;
+  font-weight: 100;
+}
+
+.section-4 {
+
+  color: #efefef;
+  padding: 20px 0;
+  height: calc(100vh - 40px); /* Adjust height to fit the viewport with padding */
+  overflow-y: auto; /* Enable vertical scrolling */
+  scrollbar-width: thin; /* For Firefox */
+  scrollbar-color: #888 #1d1d1d; /* Customize scrollbar colors */
+  margin-top: 21%;
+  overflow: auto;
+  padding-bottom: 100px;
+
+}
+
+.section-4::-webkit-scrollbar {
+  width: 8px; /* Scrollbar width */
+  display: none;
+}
+
+.section-4::-webkit-scrollbar-thumb {
+  background: #888; /* Scrollbar color */
+  border-radius: 4px; /* Rounded scrollbar corners */
+}
+
+.section-4::-webkit-scrollbar-track {
+  background: #1d1d1d; /* Scrollbar track color */
+}
+
+.row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
+  gap: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.figure {
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  height: 250px; /* Adjust the height for uniformity */
+}
+
+.figure img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+/* Title Overlay (Always Visible) */
+.title-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.5); /* Add blur effect */
+  backdrop-filter: blur(5px); /* Actual blur for modern browsers */
+  color: #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Futura LT', sans-serif;
+  font-weight: 300;
+  text-transform: uppercase;
+  font-size: 1rem;
+  padding: 10px 0;
+  z-index: 2; /* Ensures it stays above the image */
+}
+
+.figure:hover img {
+  transform: scale(1.05); /* Slight zoom effect */
+}
+/* .figure img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+} */
+/* 
+.figure:hover img {
+  transform: scale(1.1); 
+  opacity: 0.7;
+}
+
+.figure div {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.figure:hover div {
+  opacity: 1; 
+}
+
+.figure h3 {
+  color: #efefef;
+  font-weight: 400;
+  margin: 0;
+  text-transform: uppercase;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+.figure h3 span {
+  font-weight: 700;
+  display: block;
+} */

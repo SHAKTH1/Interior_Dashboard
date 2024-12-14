@@ -4,73 +4,63 @@
     top: 10px;
     left: 14%;
     width: 73%;
-    background: rgba(255, 255, 255, 0.1); /* Softer semi-transparent background */
-    backdrop-filter: blur(12px); /* Enhanced blur effect */
-    border-radius: 12px;
-    padding: 10px;
+    background: rgba(0, 0, 0, 0.6); /* Darker semi-transparent background */
+    backdrop-filter: blur(8px); /* Slight blur for modern look */
+    border-radius: 10px;
+    padding: 15px;
     z-index: 1000;
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3); /* Softer shadow for depth */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4); /* Subtle shadow for depth */
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
-
 /* Progress Bar Container */
 .progress-bar-container {
     display: flex;
-        flex-direction: column;
-        align-items: center;
-        width: 95%;
-        top: 0px;
+    flex-direction: column;
+    align-items: center;
+    width: 95%;
 }
-
 
 /* Progress Line */
 .progress-line {
     width: 100%;
     height: 6px;
-    background: #ccc; /* Base color for uncompleted line */
+    background: #d3d3d3; /* Grey for uncompleted line */
     position: relative;
-    margin: 10px 0;
-    overflow: hidden;
+    margin: 15px 0;
     border-radius: 3px;
-    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
 }
 
-
-/* Progress Line Active */
-.progress-line::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 0; /* Dynamically adjusted width */
+/* Active Progress Line */
+.progress-bar-active {
     height: 100%;
-    background: linear-gradient(90deg, #8e44ad, #d4a5de); /* Vibrant gradient for the active portion */
-    transition: width 0.5s ease-in-out; /* Smooth transition */
-    z-index: 1;
-    border-radius: 8px;
+    width: 0; /* Start with 0 width */
+    background: linear-gradient(90deg, #1e3a8a, #3b82f6); /* Gradient for active portion */
+    transition: width 0.4s ease-in-out; /* Smooth transition */
+    border-radius: 3px;
 }
 
 /* Progress Point */
 .progress-point {
-    height: 30px; /* Larger size for emphasis */
-    width: 30px;
-    background: radial-gradient(circle, #ffffff, #6c3483); /* Gradient for the point */
-    border: 5px solid white; /* White highlight border */
+    height: 20px;
+    width: 20px;
+    background: radial-gradient(circle, #ffffff, #1e3a8a); /* Subtle gradient */
+    border: 3px solid #ffffff; /* White border for contrast */
     border-radius: 50%;
     position: absolute;
-    top: -11px; /* Centered above the line */
-    left: 0; /* Dynamically adjusted left position */
-    transition: left 0.5s ease-in-out, transform 0.3s ease; /* Smooth movement and slight pop */
+    top: -8px; /* Centered above the line */
+    left: 0%; /* Start at 0% */
+    transition: left 0.4s ease-in-out, transform 0.3s ease; /* Smooth movement */
     z-index: 2;
-    box-shadow: 0 0 15px #6c3483, 0 0 25px rgba(108, 52, 131, 0.5); /* Glow effect */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Subtle shadow */
 }
 
 .progress-point:hover {
-    transform: scale(1.2); /* Slight zoom on hover for interactivity */
-    box-shadow: 0 0 25px #6c3483, 0 0 40px rgba(108, 52, 131, 0.7); /* Enhanced glow on hover */
+    transform: scale(1.2); /* Slight zoom on hover */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5), 0 2px 6px #1e3a8a; /* Enhanced shadow */
 }
 
 /* Progress Labels */
@@ -78,24 +68,21 @@
     display: flex;
     justify-content: space-between;
     width: 100%;
-    font-size: 1rem; /* Slightly larger font for better readability */
-    color: #e0e0e0; /* Softer neutral color */
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6); /* Slight shadow for text clarity */
-    font-family: 'Poppins', sans-serif; /* Modern, clean font */
+    font-size: 0.9rem;
+    color: #808080; /* Grey for inactive labels */
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    font-family: 'Poppins', sans-serif; /* Modern font */
 }
 
 .progress-labels span {
-    transition: color 0.5s ease, font-size 0.3s ease, transform 0.3s ease; /* Smooth transitions */
+    transition: color 0.3s ease, font-size 0.3s ease, transform 0.3s ease; /* Smooth transitions */
 }
 
 /* Active Label */
 .progress-labels span.active {
-    color: #6c3483; /* Highlight color */
+    color: #1e3a8a; /* Blue for active label */
     font-weight: bold;
-    font-size: 1.2rem; /* Larger font for active label */
-    transform: scale(1.1); /* Slightly larger active label */
-    text-shadow: 0 3px 6px rgba(0, 0, 0, 0.4), 0 1px 2px #6c3483; /* Enhanced shadow for active label */
+    font-size: 1rem;
+    transform: scale(1.1);
+    text-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
 }
-
-
-

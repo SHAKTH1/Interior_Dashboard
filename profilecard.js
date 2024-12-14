@@ -8,6 +8,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     const profileIconImg = document.getElementById("profile-icon-img");
     const logoutButton = document.getElementById("logout-button");
 
+    // Standard profile icon path
+    const standardIconPath = "./assets/icons/user.png"; // Adjust relative path if necessary
+
     // Fetch profile details from API
     try {
         const response = await fetchWithToken('/api/profile');
@@ -18,12 +21,15 @@ document.addEventListener("DOMContentLoaded", async () => {
         profileEmail.textContent = profile.email || "Email not available";
         profilePhone.textContent = profile.phone || "Phone not available";
 
-        // Set profile image for both icon and card
-        const profileImageUrl = `https://i.pravatar.cc/150?u=${profile.email}`;
-        profileImage.src = profileImageUrl;
-        profileIconImg.src = profileImageUrl;
+        // Set standard profile image for both icon and card
+        profileImage.src = standardIconPath;
+        profileIconImg.src = standardIconPath;
     } catch (error) {
         console.error("Error fetching profile details:", error);
+
+        // Fallback: Ensure the standard icon is set even if API fails
+        profileImage.src = standardIconPath;
+        profileIconImg.src = standardIconPath;
     }
 
     // Toggle profile card visibility
@@ -46,5 +52,3 @@ document.addEventListener("DOMContentLoaded", async () => {
         window.location.href = "/"; // Redirect to signin page
     });
 });
-
-
