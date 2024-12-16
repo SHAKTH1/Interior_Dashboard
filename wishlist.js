@@ -1,140 +1,120 @@
 document.addEventListener("DOMContentLoaded", () => {
-    // Wishlist array (stores objects with image source and details)
-    let wishlist = [];
+    // Initialize wishlist array
+    if (!window.wishlist) window.wishlist = [];
 
-    // Function to toggle wishlist
-    const toggleWishlist = (modelSrc, modelDetails) => {
-        const itemIndex = wishlist.findIndex((item) => item.src === modelSrc);
+        // Function to fetch user details
+        const fetchUserDetails = async () => {
+            try {
+                const response = await fetch('/api/profile', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('token')}` // Add token from localStorage
+                    }
+                });
+    
+                if (!response.ok) throw new Error('Failed to fetch user details');
+    
+                const userDetails = await response.json();
+                console.log("User Details:", userDetails);
+                return userDetails;
+            } catch (error) {
+                console.error("Error fetching user details:", error);
+                alert("Failed to fetch user details.");
+                throw error;
+            }
+        };
+    // Function to toggle wishlist items
+    window.toggleWishlist = (modelSrc, modelDetails) => {
+        const itemIndex = window.wishlist.findIndex((item) => item.src === modelSrc);
+
         if (itemIndex !== -1) {
-            wishlist.splice(itemIndex, 1); // Remove the item from wishlist
+            // Remove item if it already exists
+            window.wishlist.splice(itemIndex, 1);
             alert("Removed from wishlist!");
         } else {
-            wishlist.push({ src: modelSrc, details: modelDetails });
-            alert("Added to wishlist!");
+            // Add item to wishlist
+            window.wishlist.push({ src: modelSrc, details: modelDetails });
+            alert("Successfully added to wishlist!");
         }
-        console.log("Wishlist:", wishlist);
 
-        // Update the wishlist modal if open
-        const wishlistModal = document.getElementById("wishlist-modal");
-        if (wishlistModal && !wishlistModal.classList.contains("hidden")) {
-            showWishlist();
-        }
+        console.log("Updated Wishlist:", window.wishlist);
+        renderWishlistModal();
     };
 
-    // Render the gallery with wishlist icons
-    const renderGallery = (images, section) => {
-        const galleryTitle = document.querySelector(".gallery-title");
-        const galleryContainer = document.getElementById("gallery");
-        galleryTitle.textContent = `${section} Models`;
-
-        galleryContainer.innerHTML = images
-            .map(
-                (src, index) => `
-            <div class="box" style="background-image: url('${src}');">
-                <button 
-                    class="wishlist-btn" 
-                    data-src="${src}" 
-                    data-details="${section} - Model ${index + 1}">
-                    ❤️
-                </button>
-                <div class="overlay-label">Model ${index + 1}</div>
-            </div>`
-            )
-            .join("");
-
-        // Reattach event listener to wishlist buttons
-        const wishlistButtons = document.querySelectorAll(".wishlist-btn");
-        wishlistButtons.forEach((button) => {
-            button.addEventListener("click", (event) => {
-                event.stopPropagation(); // Prevent parent click events
-                const modelSrc = button.getAttribute("data-src");
-                const modelDetails = button.getAttribute("data-details");
-                toggleWishlist(modelSrc, modelDetails);
-            });
-        });
-            // Event listener for wishlist cart icon
-    const wishlistCartIcon = document.getElementById("wishlist-icon");
-    wishlistCartIcon?.addEventListener("click", () => {
-        updateProgressBar(5); // Move to "Get Quote"
-    });
-       
-    };
-
-    const fetchUserDetails = async () => {
-        try {
-            const response = await fetch('/api/profile', {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${localStorage.getItem('token')}` // Add token from localStorage
-                }
-            });
-
-            if (!response.ok) {
-                throw new Error('Failed to fetch user details');
-            }
-
-            const userDetails = await response.json();
-            console.log("User Details:", userDetails);
-            return userDetails;
-        } catch (error) {
-            console.error("Error:", error);
-            throw error;
-        }
-    };
-
-    const showWishlist = () => {
-        const wishlistModal = document.getElementById("wishlist-modal");
+    // Render wishlist modal
+    const renderWishlistModal = () => {
         const wishlistContainer = document.getElementById("wishlist-container");
 
-        if (wishlist.length > 0) {
-            wishlistContainer.innerHTML = wishlist
+        if (!wishlistContainer) {
+            console.error("Wishlist container not found.");
+            return;
+        }
+
+        wishlistContainer.innerHTML = ""; // Clear existing content
+
+        if (window.wishlist.length > 0) {
+            wishlistContainer.innerHTML = window.wishlist
                 .map(
                     (item, index) => `
-                <div class="wishlist-item">
-                    <img src="${item.src}" alt="Wishlist Model ${index + 1}" />
-                    <div class="wishlist-details">
-                        <p>${item.details}</p>
-                        <button 
-                            class="remove-btn" 
-                            data-src="${item.src}" 
-                            data-details="${item.details}">
-                            Remove
-                        </button>
-                    </div>
-                </div>`
+                    <div class="wishlist-item">
+                        <img src="${item.src}" alt="Wishlist Item ${index + 1}" />
+                        <div class="wishlist-details">
+                            <p>${item.details}</p>
+                            <button class="remove-btn" onclick="toggleWishlist('${item.src}', '${item.details}')">
+                                Remove
+                            </button>
+                        </div>
+                    </div>`
                 )
                 .join("");
 
-            // Add Get Quote button
+            // Add the Get Quote button
             wishlistContainer.insertAdjacentHTML(
                 "beforeend",
-                `<button id="get-quote-btn" class="get-quote-btn">Get Quote</button>`
+                `<button id="get-quote-btn" class="get-quote-btn" style="margin-top: 20px; padding: 10px; background: #edaa02; color: #fff; border: none; border-radius: 5px; cursor: pointer;">
+                    Get Quote
+                </button>`
             );
 
             // Attach event listener to Get Quote button
             document.getElementById("get-quote-btn").addEventListener("click", async () => {
                 try {
+                    if (!window.wishlist || window.wishlist.length === 0) {
+                        alert("Your wishlist is empty!");
+                        return;
+                    }
+            
                     const userDetails = await fetchUserDetails();
-                    const { username, email, phone } = userDetails;
-
-                    // Send the wishlist and user details to the server
+                    console.log("Fetched User Details:", userDetails);
+            
+                    const { username: name, email, phone } = userDetails;
+            
+                    console.log("Sending Wishlist:", {
+                        userName: name,
+                        userEmail: email,
+                        userPhone: phone,
+                        wishlist: window.wishlist,
+                    });
+            
                     const response = await fetch("/api/send-wishlist", {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json",
+                            "Authorization": `Bearer ${localStorage.getItem('token')}`
                         },
                         body: JSON.stringify({
-                            userName: username,
+                            userName: name,
                             userEmail: email,
                             userPhone: phone,
-                            wishlist,
+                            wishlist: window.wishlist,
                         }),
                     });
-
+            
                     if (response.ok) {
                         alert("Quote request sent successfully!");
                     } else {
+                        console.error("Server Response:", await response.text());
                         alert("Failed to send quote request.");
                     }
                 } catch (error) {
@@ -142,35 +122,24 @@ document.addEventListener("DOMContentLoaded", () => {
                     alert("An error occurred while sending your request.");
                 }
             });
-
-            // Attach event listeners to "Remove" buttons
-            const removeButtons = document.querySelectorAll(".remove-btn");
-            removeButtons.forEach((button) => {
-                button.addEventListener("click", (event) => {
-                    event.stopPropagation(); // Prevent parent click events
-                    const modelSrc = button.getAttribute("data-src");
-                    const modelDetails = button.getAttribute("data-details");
-                    toggleWishlist(modelSrc, modelDetails);
-                });
-            });
         } else {
-            // Show a message when wishlist is empty
             wishlistContainer.innerHTML = "<p>Your wishlist is empty!</p>";
         }
-
-        // Show the modal
-        wishlistModal.classList.remove("hidden");
+    };
+            
+    // Show wishlist modal
+    window.showWishlist = () => {
+        renderWishlistModal();
+        document.getElementById("wishlist-modal").classList.remove("hidden");
     };
 
-    // Close the wishlist modal
-    const closeWishlist = () => {
-        const wishlistModal = document.getElementById("wishlist-modal");
-        wishlistModal.classList.add("hidden");
+    // Close wishlist modal
+    window.closeWishlist = () => {
+        document.getElementById("wishlist-modal").classList.add("hidden");
     };
 
     // Expose functions globally
-    window.renderGallery = renderGallery;
+    window.toggleWishlist = toggleWishlist;
     window.showWishlist = showWishlist;
     window.closeWishlist = closeWishlist;
-    window.toggleWishlist = toggleWishlist;
 });

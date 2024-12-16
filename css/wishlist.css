@@ -38,7 +38,7 @@
 }
 
 .close-wishlist {
-    background: #f55d56;
+    background: #edaa02;
     color: white;
     border: none;
     border-radius: 10px;
@@ -65,7 +65,7 @@
 }
 
 .wishlist-item button {
-    background: #ff6b6b;
+    background: #edaa02;
     color: white;
     border: none;
     border-radius: 5px;
@@ -74,25 +74,23 @@
 }
 
 
-/* Wishlist Button */
+/* Wishlist Button Styling */
 .wishlist-btn {
     position: absolute;
-    top: 10px; /* Adjust to place at the top-right */
+    top: 10px;
     right: 10px;
-    background: rgba(255, 255, 255, 0.8); /* Semi-transparent background */
-    color: #ff6b6b; /* Wishlist icon or text color */
+    background: rgba(255, 255, 255, 0.9);
+    color: #ff6b6b;
     border: none;
     border-radius: 50%;
     padding: 10px;
     font-size: 16px;
     cursor: pointer;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-    transition: transform 0.2s ease-in-out;
+    transition: transform 0.2s ease;
     z-index: 10;
 }
-
 .wishlist-btn:hover {
-    transform: scale(1.2); /* Slight zoom on hover */
+    transform: scale(1.2);
     background: #ff6b6b;
     color: white;
 }

@@ -167,9 +167,9 @@ body {
     height: 55vh;
 }
 
-.custom-gallery-item:hover div {
+/* .custom-gallery-item:hover div {
     opacity: 1;
-}
+} */
 
 /* Overlay text styles */
 .custom-gallery-item h3 {
@@ -240,8 +240,9 @@ body {
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.9);
-    display: flex;
-    justify-content: center;
+    display: flex
+;
+    justify-content: space-around;
     align-items: center;
     z-index: 9999;
     padding: 20px;
@@ -250,11 +251,11 @@ body {
 
 /* Fullscreen image styling */
 .image-full-screen {
-    max-width: 35%;
-    max-height: 80%;
+    max-width: 46%;
+    max-height: 147%;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
     border-radius: 10px;
-    margin-left: 29%;
+    margin-left: 26%;
 }
 
 /* Close button styling */
@@ -276,4 +277,83 @@ body {
 .image-close-button:hover {
     background-color: #f44336;
     color: #fff;
+}
+
+/* nav-arrow */
+.nav-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(62, 14, 14, 0.5);
+    color: #fff;
+    font-size: 2rem;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    z-index: 10;
+    border-radius: 50%;
+    transition: background-color 0.3s ease;
+}
+
+.nav-arrow:hover {
+    background-color: rgba(255, 255, 255, 0.8);
+    color: #000;
+}
+
+.left-arrow {
+    left: 20px;
+}
+
+.right-arrow {
+    right: 20px;
+}
+/* Down arrow */
+.down-arrow {
+    position: absolute;
+    bottom: 23px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(0, 0, 0, 0.5);
+    color: #fff;
+    font-size: 1.5rem;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 50%;
+    transition: background-color 0.3s ease;
+    top: 88%;
+}
+
+.down-arrow:hover {
+    background-color: rgba(255, 255, 255, 0.8);
+    color: #000;
+}
+/* Placeholder container */
+#placeholder-container {
+    display: flex
+    ;
+        flex-wrap: wrap;
+        gap: 10px;
+        justify-content: center;
+        margin-top: 10px;
+        padding: 10px;
+        background-color: #f5f5f5;
+        border-radius: 10px;
+        flex-direction: column;
+        align-content: space-between;
+}
+
+.placeholder-image {
+    width: 120px;
+    height: 90px;
+    object-fit: cover;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.placeholder-image:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }

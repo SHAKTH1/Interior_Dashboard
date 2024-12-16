@@ -112,14 +112,22 @@ const fetchImagesFromServer = async (category, section) => {
         if (!response.ok) {
             throw new Error("Failed to fetch images");
         }
+
+        // Map the returned array of image paths into objects with a "main" property
         const images = await response.json();
-        console.log(`Fetched images for ${category} - ${section}:`, images);
-        return images;
+        const formattedImages = images.map((img) => ({
+            main: img, // Main image
+            subImages: [img], // Placeholder for sub-images, you can replace this later
+        }));
+
+        console.log(`Formatted images for ${category} - ${section}:`, formattedImages);
+        return formattedImages;
     } catch (error) {
         console.error("Error fetching images:", error);
         return [];
     }
 };
+
 
 let currentPage = "landing";
 let selectedCategory = null;
@@ -171,92 +179,94 @@ const renderContentList = () => {
     });
 };
 
+const renderGalleryImages = (models, section) => {
+    const gallery = document.getElementById("gallery");
 
-const renderGalleryImages = (images, section) => {
-    const galleryElement = document.getElementById("gallery");
-
-    galleryElement.className = "custom-gallery-container"; // Apply the new gallery container style
-
-    galleryElement.innerHTML = images
-    .map(
-        (src, index) => `
-        <figure class="custom-gallery-item">
-            <img 
-                src="${src}" 
-                alt="${section} - Model ${index + 1}" 
-            />
-            <button 
-                class="wishlist-btn" 
-                data-src="${src}" 
-                data-details="${section} - Model ${index + 1}">
-                ❤️
-            </button>
-            <div>
-                <h3>${section} <span>Model ${index + 1}</span></h3>
-                <button 
-                    class="custom-full-screen-button" 
-                    data-src="${src}">
-                    Full Screen
+    gallery.innerHTML = models
+        .map(
+            (model, index) => `
+            <div class="custom-gallery-item">
+                <img src="${model.main}" alt="Model ${index + 1}" 
+                     onerror="this.src='https://via.placeholder.com/300x200?text=Image+Not+Found'">
+                <button class="wishlist-btn" 
+                    onclick="toggleWishlist('${model.main}', '${section} - Model ${index + 1}')">
+                    ❤️
                 </button>
+                <div class="content">
+                    <h3>${section} - Model ${index + 1}</h3>
+                    <button onclick="fetchSubImages('${section}', '${model.main}')">
+                        Full Screen
+                    </button>
+                </div>
             </div>
-        </figure>`
-    )
-    .join("");
-
-    // Attach wishlist button event listeners
-    const wishlistButtons = document.querySelectorAll(".wishlist-btn");
-    wishlistButtons.forEach((button) => {
-        button.addEventListener("click", (e) => {
-            e.stopPropagation();
-            const modelSrc = button.dataset.src;
-            const modelDetails = button.dataset.details;
-            toggleWishlist(modelSrc, modelDetails);
-        });
-    });
-
-    // Ensure the gallery container layout updates dynamically
-    const galleryContainer = document.querySelector(".gallery-container");
-    if (galleryContainer) {
-        galleryContainer.style.display = "flex";
-        galleryContainer.style.flexWrap = "wrap";
-        galleryContainer.style.justifyContent = "center";
-    }
-
-
-    // Attach full-screen button event listeners
-    const fullScreenButtons = document.querySelectorAll(".custom-full-screen-button");
-    fullScreenButtons.forEach((button) => {
-        button.addEventListener("click", (e) => {
-            const imageSrc = e.currentTarget.dataset.src;
-            showFullScreenImage(imageSrc); // Use your existing fullscreen function
-        });
-    });
+        `
+        )
+        .join("");
 };
-const showFullScreenImage = (imageSrc) => {
-    const safeSrc = encodeURI(imageSrc);
 
+
+const fetchSubImages = async (section, mainImage) => {
+    try {
+        // Retrieve the token from local storage
+        const token = localStorage.getItem("token");
+        if (!token) throw new Error("Unauthorized: No token found");
+
+        // Add the Authorization header with the Bearer token
+        const response = await fetch(`/api/sub-images?section=${section}`, {
+            method: "GET",
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+
+        if (!response.ok) throw new Error("Failed to fetch sub-images");
+
+        const subImages = await response.json(); // Expect an array of image URLs
+
+        // Call the full-screen view with fetched sub-images
+        showFullScreen(mainImage, subImages);
+    } catch (error) {
+        console.error("Error fetching sub-images:", error);
+        alert("Failed to load additional images. Please check your session.");
+    }
+};
+
+
+window.showFullScreen = (mainImage, subImages) => {
     const fullScreenDiv = document.createElement("div");
-    fullScreenDiv.className = "image-full-screen-container";
+    fullScreenDiv.className = "full-screen-container";
     fullScreenDiv.innerHTML = `
-        <div class="full-screen-overlay">
-            <img src="${safeSrc}" class="image-full-screen" alt="Full Screen Model" />
-            <button class="image-close-button" id="closeFullScreen">Close</button>
+        <img src="${mainImage}" id="fullScreenImage" alt="Full Screen">
+        <div class="sub-images">
+            ${subImages
+                .map(
+                    (img, index) => `
+                <img src="${img}" onclick="switchImage('${img}', this)" class="${index === 0 ? 'active' : ''}">
+            `
+                )
+                .join("")}
         </div>
+        <button class="close-fullscreen" onclick="closeFullScreen()">Close</button>
     `;
-
     document.body.appendChild(fullScreenDiv);
-
-    // Center the close button relative to the viewport
-    const closeButton = document.getElementById("closeFullScreen");
-    closeButton.addEventListener("click", closeFullScreenImage);
 };
 
-const closeFullScreenImage = () => {
-    const fullScreenDiv = document.querySelector(".image-full-screen-container");
-    if (fullScreenDiv) {
-        fullScreenDiv.remove();
-    }
+
+
+window.closeFullScreen = () => {
+    const fullScreenDiv = document.querySelector(".full-screen-container");
+    if (fullScreenDiv) fullScreenDiv.remove();
 };
+
+window.switchImage = (src, element) => {
+    document.getElementById("fullScreenImage").src = src;
+    document.querySelectorAll(".sub-images img").forEach(img => img.classList.remove("active"));
+    element.classList.add("active");
+};
+
+window.showFullScreen = showFullScreen;
+window.closeFullScreen = closeFullScreen;
+window.switchImage = switchImage;
 
 
 const showPage = (pageKey) => {

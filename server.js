@@ -183,6 +183,30 @@ app.get("/api/images", authenticateToken, (req, res) => {
     });
 });
 
+app.get("/api/sub-images", authenticateToken, (req, res) => {
+    const { section } = req.query;
+    const folderName = sectionMapping[section];
+
+    if (!folderName) {
+        return res.status(400).json({ error: "Invalid section" });
+    }
+
+    const subFolderPath = path.join(__dirname, "assets/images/standard", folderName, "sub");
+
+    fs.readdir(subFolderPath, (err, files) => {
+        if (err) {
+            console.error("Error reading sub-directory:", err);
+            return res.status(500).json({ error: "Unable to fetch sub-images" });
+        }
+
+        const imagePaths = files
+            .filter((file) => /\.(jpg|jpeg|png)$/i.test(file))
+            .map((file) => `/assets/images/standard/${folderName}/sub/${file}`);
+
+        res.json(imagePaths);
+    });
+});
+
 
 router.get("/api/get-user-details", async (req, res) => {
     try {

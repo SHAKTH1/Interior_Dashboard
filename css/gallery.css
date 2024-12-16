@@ -1,0 +1,145 @@
+/* General Styles */
+.gallery-title {
+    font-family: 'Futura LT', sans-serif;
+    text-align: center;
+    color: #1e3a8a;
+    font-size: 2.5rem;
+    margin-top: 20px;
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
+    font-weight: 600;
+}
+
+/* Gallery Container */
+.custom-gallery-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 25px;
+    padding: 30px;
+    background: rgba(0, 0, 0, 0.5); /* Semi-transparent dark background */
+    border-radius: 10px;
+    backdrop-filter: blur(10px); /* Glassmorphism effect */
+}
+
+/* Gallery Item */
+.custom-gallery-item {
+    position: relative;
+    width: 300px;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+    background: rgba(255, 255, 255, 0.2); /* Transparent white */
+    backdrop-filter: blur(10px); /* Glass effect */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.custom-gallery-item:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+}
+
+.custom-gallery-item img {
+    width: 100%;
+    height: 288px;
+    object-fit: cover;
+    display: block;
+    border-bottom: 4px solid #1e3a8a;
+}
+
+.custom-gallery-item .content {
+    padding: 15px 10px;
+    text-align: center;
+    background: rgba(30, 58, 138, 0.8); /* Semi-transparent blue */
+    color: #fff;
+    font-family: 'Poppins', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.custom-gallery-item .content h3 {
+    margin: 0 0 10px;
+    font-size: 1.2rem;
+}
+/* Full-Screen Button */
+.custom-gallery-item .content button {
+    background: #edaa02; /* Yellow */
+    color: #fff; /* White text */
+    border: 2px solid #fff; /* White border */
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.custom-gallery-item .content button:hover {
+    background: #fff; /* White background on hover */
+    color: #edaa02; /* Yellow text on hover */
+    border-color: #edaa02; /* Yellow border on hover */
+    transform: scale(1.1);
+}
+
+/* Full-Screen View */
+.full-screen-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.full-screen-container img {
+    max-width: 60%;
+    max-height: 80%;
+    border-radius: 10px;
+    border: 2px solid #1e3a8a;
+}
+
+.sub-images {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.sub-images img {
+    width: 80px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 5px;
+    cursor: pointer;
+    opacity: 0.7;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.sub-images img:hover,
+.sub-images img.active {
+    opacity: 1;
+    transform: scale(1.1);
+    border: 2px solid #1e3a8a;
+}
+
+.close-fullscreen {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: #edaa02;
+    color: #fff;
+    border: none;
+    padding: 10px 15px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.close-fullscreen:hover {
+    background: #fff;
+    color: #edaa02;
+    border: 2px solid #edaa02;
+}
