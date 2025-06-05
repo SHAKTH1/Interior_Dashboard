@@ -1,102 +1,74 @@
 document.addEventListener("DOMContentLoaded", () => {
-    // Initialize wishlist array
-    if (!window.wishlist) window.wishlist = [];
+    const pageLoader = document.getElementById("page-loader");
 
-        // Function to fetch user details
-        const fetchUserDetails = async () => {
-            try {
-                const response = await fetch('/api/profile', {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${localStorage.getItem('token')}` // Add token from localStorage
-                    }
-                });
-    
-                if (!response.ok) throw new Error('Failed to fetch user details');
-    
-                const userDetails = await response.json();
-                console.log("User Details:", userDetails);
-                return userDetails;
-            } catch (error) {
-                console.error("Error fetching user details:", error);
-                alert("Failed to fetch user details.");
-                throw error;
-            }
-        };
-    // Function to toggle wishlist items
-    window.toggleWishlist = (modelSrc, modelDetails) => {
-        const itemIndex = window.wishlist.findIndex((item) => item.src === modelSrc);
-
-        if (itemIndex !== -1) {
-            // Remove item if it already exists
-            window.wishlist.splice(itemIndex, 1);
-            alert("Removed from wishlist!");
-        } else {
-            // Add item to wishlist
-            window.wishlist.push({ src: modelSrc, details: modelDetails });
-            alert("Successfully added to wishlist!");
-        }
-
-        console.log("Updated Wishlist:", window.wishlist);
-        renderWishlistModal();
+    // Global functions for showing and hiding loader
+    const showLoader = () => {
+        pageLoader.style.display = "flex";
     };
 
-    // Render wishlist modal
-    const renderWishlistModal = () => {
-        const wishlistContainer = document.getElementById("wishlist-container");
+    const hideLoader = () => {
+        pageLoader.style.display = "none";
+    };
 
-        if (!wishlistContainer) {
-            console.error("Wishlist container not found.");
-            return;
-        }
+    // Function to ensure all images on the page are loaded
+    const allImagesLoaded = (selector = "img") => {
+        return new Promise((resolve) => {
+            const images = document.querySelectorAll(selector);
+            let loadedCount = 0;
 
-        wishlistContainer.innerHTML = ""; // Clear existing content
+            if (images.length === 0) return resolve();
 
-        if (window.wishlist.length > 0) {
-            wishlistContainer.innerHTML = window.wishlist
-                .map(
-                    (item, index) => `
-                    <div class="wishlist-item">
-                        <img src="${item.src}" alt="Wishlist Item ${index + 1}" />
-                        <div class="wishlist-details">
-                            <p>${item.details}</p>
-                            <button class="remove-btn" onclick="toggleWishlist('${item.src}', '${item.details}')">
-                                Remove
-                            </button>
-                        </div>
-                    </div>`
-                )
-                .join("");
-
-            // Add the Get Quote button
-            wishlistContainer.insertAdjacentHTML(
-                "beforeend",
-                `<button id="get-quote-btn" class="get-quote-btn" style="margin-top: 20px; padding: 10px; background: #edaa02; color: #fff; border: none; border-radius: 5px; cursor: pointer;">
-                    Get Quote
-                </button>`
-            );
-
-            // Attach event listener to Get Quote button
-            document.getElementById("get-quote-btn").addEventListener("click", async () => {
-                try {
-                    if (!window.wishlist || window.wishlist.length === 0) {
-                        alert("Your wishlist is empty!");
-                        return;
-                    }
-            
-                    const userDetails = await fetchUserDetails();
-                    console.log("Fetched User Details:", userDetails);
-            
-                    const { username: name, email, phone } = userDetails;
-            
-                    console.log("Sending Wishlist:", {
-                        userName: name,
-                        userEmail: email,
-                        userPhone: phone,
-                        wishlist: window.wishlist,
+            images.forEach((img) => {
+                if (img.complete) {
+                    loadedCount++;
+                } else {
+                    img.addEventListener("load", () => {
+                        loadedCount++;
+                        if (loadedCount === images.length) resolve();
                     });
-            
+                }
+            });
+
+            if (loadedCount === images.length) resolve();
+        });
+    };
+
+    // Universal function to wrap API requests with loader
+    const withLoader = async (task) => {
+        try {
+            showLoader();
+            await task();
+        } catch (error) {
+            console.error("Error during operation:", error);
+        } finally {
+            hideLoader();
+        }
+    };
+
+    // Simulate resource and image loading for the page
+    const simulateResourceLoading = async () => {
+        showLoader();
+        await allImagesLoaded(); // Wait for images to load
+        setTimeout(hideLoader, 500); // Smooth transition
+    };
+
+    // Trigger page loader on navigation
+    const setupPageLoader = () => {
+        document.addEventListener("click", (e) => {
+            if (e.target.tagName === "BUTTON" || e.target.classList.contains("navigation")) {
+                simulateResourceLoading();
+            }
+        });
+    };
+
+    // API Handler for Get Quote Button
+    const setupGetQuoteButton = () => {
+        document.addEventListener("click", async (e) => {
+            if (e.target && e.target.id === "get-quote-btn") {
+                await withLoader(async () => {
+                    const userDetails = await fetchUserDetails();
+                    const { username: name, email, phone } = userDetails;
+
                     const response = await fetch("/api/send-wishlist", {
                         method: "POST",
                         headers: {
@@ -110,36 +82,16 @@ document.addEventListener("DOMContentLoaded", () => {
                             wishlist: window.wishlist,
                         }),
                     });
-            
-                    if (response.ok) {
-                        alert("Quote request sent successfully!");
-                    } else {
-                        console.error("Server Response:", await response.text());
-                        alert("Failed to send quote request.");
-                    }
-                } catch (error) {
-                    console.error("Error:", error);
-                    alert("An error occurred while sending your request.");
-                }
-            });
-        } else {
-            wishlistContainer.innerHTML = "<p>Your wishlist is empty!</p>";
-        }
-    };
-            
-    // Show wishlist modal
-    window.showWishlist = () => {
-        renderWishlistModal();
-        document.getElementById("wishlist-modal").classList.remove("hidden");
+
+                    if (!response.ok) throw new Error("Failed to send quote request.");
+                    alert("Quote request sent successfully!");
+                });
+            }
+        });
     };
 
-    // Close wishlist modal
-    window.closeWishlist = () => {
-        document.getElementById("wishlist-modal").classList.add("hidden");
-    };
-
-    // Expose functions globally
-    window.toggleWishlist = toggleWishlist;
-    window.showWishlist = showWishlist;
-    window.closeWishlist = closeWishlist;
+    // Call on page load
+    simulateResourceLoading(); // Initial page load
+    setupPageLoader(); // Attach loader for page navigation
+    setupGetQuoteButton(); // Attach loader for "Get Quote"
 });
